@@ -2,10 +2,21 @@ import { createNeonAuth } from "@neondatabase/auth/next/server";
 
 let authInstance: ReturnType<typeof createNeonAuth> | null = null;
 
+function resolveCookieSecret(): string | null {
+  const fromEnv = process.env.NEON_AUTH_COOKIE_SECRET?.trim();
+  if (fromEnv && fromEnv.length >= 32) return fromEnv;
+  // Só em `next dev`: o SDK exige ≥32 chars; evita obrigar a gerar segredo à mão no .env.local.
+  // Em produção (`next build` / deploy) continua obrigatório NEON_AUTH_COOKIE_SECRET no ambiente.
+  if (process.env.NODE_ENV === "development") {
+    return "pecuariapro-local-dev-neon-auth-cookie-secret-do-not-use-in-prod";
+  }
+  return null;
+}
+
 export function getNeonAuthOrNull() {
-  const baseUrl = process.env.NEON_AUTH_BASE_URL;
-  const secret = process.env.NEON_AUTH_COOKIE_SECRET;
-  if (!baseUrl || !secret || secret.length < 32) {
+  const baseUrl = process.env.NEON_AUTH_BASE_URL?.trim();
+  const secret = resolveCookieSecret();
+  if (!baseUrl || !secret) {
     return null;
   }
   if (!authInstance) {

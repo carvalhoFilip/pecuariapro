@@ -17,10 +17,21 @@ export async function middleware(request: NextRequest) {
   if (!auth) {
     return NextResponse.next();
   }
-  const run = auth.middleware({ loginUrl: "/login" });
+  const loginUrl = new URL("/login", request.url);
+  loginUrl.searchParams.set("redirect", pathname);
+  const run = auth.middleware({ loginUrl: loginUrl.toString() });
   return run(request);
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/vendas/:path*", "/custos/:path*", "/historico/:path*"],
+  matcher: [
+    "/dashboard",
+    "/dashboard/:path*",
+    "/vendas",
+    "/vendas/:path*",
+    "/custos",
+    "/custos/:path*",
+    "/historico",
+    "/historico/:path*",
+  ],
 };

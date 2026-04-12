@@ -6,7 +6,7 @@ import { requireSessionWithUser } from "@/lib/require-session";
 
 export const dynamic = "force-dynamic";
 
-type Ctx = { params: { id: string } };
+type Ctx = { params: Promise<{ id: string }> };
 
 export async function DELETE(_request: Request, { params }: Ctx) {
   try {
@@ -16,7 +16,7 @@ export async function DELETE(_request: Request, { params }: Ctx) {
     }
     const { user } = authRes.data;
     const db = getDb();
-    const id = params.id;
+    const { id } = await params;
     const removidos = await db
       .delete(costs)
       .where(and(eq(costs.id, id), eq(costs.userId, user.id)))

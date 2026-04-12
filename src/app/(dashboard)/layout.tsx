@@ -1,15 +1,19 @@
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { DashboardQuickActionsProvider } from "@/contexts/dashboard-quick-actions";
 import { getNeonAuthOrNull, getSessionUser } from "@/lib/auth";
+import { paywallRedirectQuery, userHasValidSubscriptionAccess } from "@/lib/subscription-access";
 import { ensureAppUser } from "@/lib/user";
 import { isUuidLike } from "@/lib/user-id";
 
 export const dynamic = "force-dynamic";
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+  const session = await getSessionUser();
+  const userEmail = session.user?.email ?? null;
   const auth = getNeonAuthOrNull();
+
   if (auth) {
-    const session = await getSessionUser();
     if (session.error === "auth_not_configured") {
       /* deixa passar: ainda sem Neon Auth */
     } else if (!session.user || session.error === "unauthorized") {
@@ -18,19 +22,18 @@ export default async function DashboardLayout({ children }: { children: React.Re
       redirect("/login");
     } else {
       const u = await ensureAppUser(session.user);
-      const status = u.subscriptionStatus ?? "inactive";
-      const liberado = status === "trialing" || status === "active";
-      const pularChecagem = process.env.SUBSCRIPTION_CHECK_DISABLED === "true";
-      if (!pularChecagem && !liberado) {
-        redirect("/pagamento");
+      if (!userHasValidSubscriptionAccess(u.subscriptionStatus, u.trialEndsAt)) {
+        redirect(`/pagamento${paywallRedirectQuery(u.subscriptionStatus, u.trialEndsAt)}`);
       }
     }
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-neutral-50 sm:flex-row">
-      <Sidebar />
-      <div className="flex min-h-0 flex-1 flex-col">{children}</div>
-    </div>
+    <DashboardQuickActionsProvider>
+      <div className="min-h-screen bg-terra-50">
+        <Sidebar userEmail={userEmail} />
+        <div className="min-h-screen md:pl-[240px]">{children}</div>
+      </div>
+    </DashboardQuickActionsProvider>
   );
 }

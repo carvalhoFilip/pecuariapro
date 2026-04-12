@@ -1,38 +1,102 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface MetricCardProps {
   titulo: string;
   valor: string;
-  icone: string;
+  Icon: LucideIcon;
   variacao?: number;
-  cor?: "verde" | "vermelho" | "amarelo" | "azul";
+  variant?: "faturamento" | "custos" | "lucro" | "arrobas";
+  /** Nome do mês já em pt (minúsculas), ex. "março" */
+  nomeMesComparacao?: string;
+  /** Valor numérico do lucro (para borda esquerda positiva/negativa) */
+  valorLucro?: number;
+  /** Exibido no rodapé do card de arrobas */
+  animaisVendidos?: number;
 }
 
-const corMap = {
-  verde: "border-emerald-200 bg-emerald-50/80 text-emerald-950",
-  vermelho: "border-red-200 bg-red-50/80 text-red-950",
-  amarelo: "border-amber-200 bg-amber-50/80 text-amber-950",
-  azul: "border-sky-200 bg-sky-50/80 text-sky-950",
+const iconBox: Record<NonNullable<MetricCardProps["variant"]>, { box: string; icon: string }> = {
+  faturamento: { box: "bg-[#dcfce7]", icon: "text-[#16a34a]" },
+  custos: { box: "bg-[#fee2e2]", icon: "text-[#dc2626]" },
+  lucro: { box: "bg-[#dbeafe]", icon: "text-[#2563eb]" },
+  arrobas: { box: "bg-[#fef3c7]", icon: "text-[#d97706]" },
 };
 
-export function MetricCard({ titulo, valor, icone, variacao, cor = "verde" }: MetricCardProps) {
+function corVariacao(
+  variant: NonNullable<MetricCardProps["variant"]>,
+  variacao: number,
+): { cls: string } {
+  if (variant === "faturamento" || variant === "lucro") {
+    const ok = variacao >= 0;
+    return { cls: ok ? "text-[#16a34a]" : "text-[#dc2626]" };
+  }
+  if (variant === "custos") {
+    const ok = variacao <= 0;
+    return { cls: ok ? "text-[#16a34a]" : "text-[#dc2626]" };
+  }
+  return { cls: "text-terra-600" };
+}
+
+export function MetricCard({
+  titulo,
+  valor,
+  Icon,
+  variacao,
+  variant = "faturamento",
+  nomeMesComparacao,
+  valorLucro,
+  animaisVendidos,
+}: MetricCardProps) {
+  const { box, icon } = iconBox[variant];
+  const showVar = variacao !== undefined && Number.isFinite(variacao) && variant !== "arrobas";
+  const positive = showVar && variacao >= 0;
+  const vsLabel = nomeMesComparacao ?? "mês anterior";
+  const varColors = showVar ? corVariacao(variant, variacao!) : null;
+
+  const lucroBorder =
+    variant === "lucro" && valorLucro !== undefined && Number.isFinite(valorLucro)
+      ? valorLucro >= 0
+        ? "border-l-[3px] border-l-[#16a34a]"
+        : "border-l-[3px] border-l-[#dc2626]"
+      : "";
+
   return (
-    <Card className={cn("border shadow-sm", corMap[cor])}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium opacity-90">{titulo}</CardTitle>
-        <span className="text-xl" aria-hidden>
-          {icone}
+    <div
+      className={cn(
+        "rounded-2xl border-[1.5px] border-[#e7e5e4] bg-white px-6 py-5 shadow-[0_1px_4px_rgba(0,0,0,0.05)]",
+        lucroBorder,
+      )}
+    >
+      <div className="flex items-start justify-between gap-3">
+        <span
+          className={cn(
+            "flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px]",
+            box,
+          )}
+        >
+          <Icon className={cn("h-9 w-9", icon)} strokeWidth={1.75} aria-hidden />
         </span>
-      </CardHeader>
-      <CardContent>
-        <p className="text-2xl font-bold tracking-tight">{valor}</p>
-        {variacao !== undefined && Number.isFinite(variacao) ? (
-          <p className="mt-1 text-xs opacity-80">
-            {variacao >= 0 ? "▲" : "▼"} {Math.abs(variacao).toFixed(1)}% vs. mês anterior
+      </div>
+      <p className="mt-4 text-[11px] font-medium uppercase tracking-wide text-terra-600">{titulo}</p>
+      <p className="mt-1 text-[28px] font-extrabold tabular-nums leading-none tracking-tight text-terra-900">
+        {valor}
+      </p>
+
+      <div className="mt-4 border-t border-[#f5f5f4] pt-3">
+        {variant === "arrobas" && animaisVendidos !== undefined ? (
+          <p className="text-xs text-terra-600">
+            {animaisVendidos} {animaisVendidos === 1 ? "animal vendido" : "animais vendidos"}
           </p>
-        ) : null}
-      </CardContent>
-    </Card>
+        ) : showVar ? (
+          <p className={cn("text-xs tabular-nums text-terra-600", varColors?.cls)}>
+            <span className="font-medium">
+              {positive ? "↑" : "↓"} {Math.abs(variacao!).toFixed(1)}% vs {vsLabel}
+            </span>
+          </p>
+        ) : (
+          <p className="text-xs text-terra-500">—</p>
+        )}
+      </div>
+    </div>
   );
 }

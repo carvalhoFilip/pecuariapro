@@ -2,12 +2,13 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { AlertCircle, Calculator, CheckCircle } from "lucide-react";
 import { calcularArrobas, calcularValorTotal } from "@/types";
 import { formatArrobas, formatBRL } from "@/lib/format";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 function parseDecimalInput(raw: string): number {
   const s = raw.trim();
@@ -25,7 +26,21 @@ function hojeInputDate(): string {
   return `${y}-${m}-${day}`;
 }
 
-export function SaleForm() {
+const fieldClass =
+  "h-12 min-h-[48px] rounded-[10px] border-[1.5px] border-terra-200 bg-white px-4 text-base text-terra-900 shadow-sm transition-interactive placeholder:text-terra-400 focus:border-verde-600 focus:outline-none focus:ring-2 focus:ring-verde-600/20";
+
+const modalInput =
+  "h-11 w-full rounded-[10px] border-[1.5px] border-terra-200 bg-white px-3 pr-10 text-[15px] text-terra-900 shadow-sm transition-all placeholder:text-terra-400 focus:border-verde-600 focus:outline-none focus:ring-[3px] focus:ring-[rgba(22,163,74,0.1)]";
+
+const modalLabel = "mb-1.5 block text-xs font-medium text-terra-700";
+
+export type SaleFormProps = {
+  titleless?: boolean;
+  onSaved?: () => void;
+  onDismiss?: () => void;
+};
+
+export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) {
   const router = useRouter();
   const [date, setDate] = useState(hojeInputDate());
   const [quantidadeAnimais, setQuantidadeAnimais] = useState("");
@@ -44,6 +59,21 @@ export function SaleForm() {
   const arrobas = liquido > 0 ? calcularArrobas(liquido) : 0;
   const valorTotal = liquido > 0 && preco > 0 ? calcularValorTotal(arrobas, preco) : 0;
   const previewValido = liquido > 0 && preco > 0 && bruto > liquido && qtd > 0;
+  const mediaPorAnimal = previewValido && qtd > 0 ? valorTotal / qtd : 0;
+
+  const pesoLiquidoInvalido = bruto > 0 && liquido > 0 && liquido >= bruto;
+
+  const podeSalvar =
+    qtd > 0 && bruto > 0 && liquido > 0 && preco > 0 && liquido < bruto && !carregando;
+
+  const progressFilled = useMemo(() => {
+    const d = Boolean(date?.trim());
+    const q = qtd > 0;
+    const b = bruto > 0;
+    const l = liquido > 0 && !pesoLiquidoInvalido;
+    const p = preco > 0;
+    return [d, q, b, l, p].filter(Boolean).length;
+  }, [date, qtd, bruto, liquido, preco, pesoLiquidoInvalido]);
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -82,7 +112,10 @@ export function SaleForm() {
         setErro(data.mensagem ?? "Não foi possível salvar.");
         return;
       }
-      router.push("/vendas");
+      onSaved?.();
+      if (!onSaved) {
+        router.push("/vendas");
+      }
       router.refresh();
     } catch {
       setErro("Sem conexão. Verifique a internet e tente de novo.");
@@ -91,101 +124,380 @@ export function SaleForm() {
     }
   }
 
+  if (titleless) {
+    return (
+      <form onSubmit={onSubmit} className="flex w-full flex-col gap-5">
+        <div
+          className="flex justify-center gap-2 py-0.5"
+          aria-label={`${progressFilled} de 5 campos obrigatórios preenchidos`}
+        >
+          {[0, 1, 2, 3, 4].map((i) => (
+            <span
+              key={i}
+              className={cn("h-2 w-2 rounded-full transition-colors", i < progressFilled ? "bg-verde-600" : "bg-terra-200")}
+            />
+          ))}
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 max-[440px]:grid-cols-1">
+          <div>
+            <Label htmlFor="data" className={modalLabel}>
+              Data da venda
+            </Label>
+            <div className="relative">
+              <Input
+                id="data"
+                type="date"
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                required
+                className={cn(modalInput, "pr-10")}
+              />
+              {date ? (
+                <CheckCircle
+                  className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-verde-600"
+                  aria-hidden
+                />
+              ) : null}
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="qtd" className={modalLabel}>
+              Qtd de animais
+            </Label>
+            <div className="relative">
+              <Input
+                id="qtd"
+                inputMode="numeric"
+                placeholder="Ex.: 42"
+                value={quantidadeAnimais}
+                onChange={(e) => setQuantidadeAnimais(e.target.value)}
+                required
+                className={cn(modalInput, qtd > 0 && "pr-10")}
+              />
+              {qtd > 0 ? (
+                <CheckCircle
+                  className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-verde-600"
+                  aria-hidden
+                />
+              ) : null}
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="bruto" className={modalLabel}>
+              Peso bruto (kg)
+            </Label>
+            <div className="relative">
+              <Input
+                id="bruto"
+                inputMode="decimal"
+                placeholder="Ex.: 12.450"
+                value={pesoBruto}
+                onChange={(e) => setPesoBruto(e.target.value)}
+                required
+                className={cn(modalInput, bruto > 0 && "pr-10")}
+              />
+              {bruto > 0 ? (
+                <CheckCircle
+                  className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-verde-600"
+                  aria-hidden
+                />
+              ) : null}
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="liquido" className={modalLabel}>
+              Peso líquido (kg)
+            </Label>
+            <div className="relative">
+              <Input
+                id="liquido"
+                inputMode="decimal"
+                placeholder="Ex.: 11.200"
+                value={pesoLiquido}
+                onChange={(e) => setPesoLiquido(e.target.value)}
+                required
+                className={cn(
+                  modalInput,
+                  liquido > 0 && !pesoLiquidoInvalido && "pr-10",
+                  pesoLiquidoInvalido && "border-danger pr-3 focus:border-danger focus:ring-red-500/15",
+                )}
+              />
+              {liquido > 0 && !pesoLiquidoInvalido ? (
+                <CheckCircle
+                  className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-verde-600"
+                  aria-hidden
+                />
+              ) : null}
+            </div>
+            {pesoLiquidoInvalido ? (
+              <p className="mt-1.5 flex items-center gap-1 text-xs font-medium text-danger" role="alert">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                Peso líquido deve ser menor que o bruto
+              </p>
+            ) : null}
+          </div>
+          <div>
+            <Label htmlFor="preco" className={modalLabel}>
+              Preço por @ (R$)
+            </Label>
+            <div className="relative">
+              <Input
+                id="preco"
+                inputMode="decimal"
+                placeholder="Ex.: 320"
+                value={precoArroba}
+                onChange={(e) => setPrecoArroba(e.target.value)}
+                required
+                className={cn(modalInput, preco > 0 && "pr-10")}
+              />
+              {preco > 0 ? (
+                <CheckCircle
+                  className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-verde-600"
+                  aria-hidden
+                />
+              ) : null}
+            </div>
+          </div>
+          <div>
+            <Label htmlFor="obs" className={modalLabel}>
+              Observação <span className="font-normal text-terra-400">(opcional)</span>
+            </Label>
+            <textarea
+              id="obs"
+              rows={1}
+              placeholder="Ex.: comprador, praça..."
+              value={observacao}
+              onChange={(e) => setObservacao(e.target.value)}
+              className={cn(modalInput, "h-11 min-h-[44px] resize-none py-2.5 leading-snug")}
+            />
+          </div>
+        </div>
+
+        <div
+          className={cn(
+            "overflow-hidden rounded-xl border-[1.5px] p-5 transition-all duration-200",
+            previewValido
+              ? "translate-y-0 border-[#bbf7d0] bg-[#f0fdf4] opacity-100"
+              : "translate-y-0 border-terra-200 bg-terra-50 opacity-100",
+          )}
+        >
+          <p className="text-sm font-semibold text-verde-900">Resumo da venda</p>
+          <hr className="my-3 border-verde-200/80" />
+          {previewValido ? (
+            <div className="grid grid-cols-3 gap-0 divide-x divide-[#bbf7d0] text-center">
+              <div className="px-2">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-[#16a34a]">Arrobas</p>
+                <p className="mt-1.5 text-lg font-bold tabular-nums text-[#14532d]">{formatArrobas(arrobas)} @</p>
+              </div>
+              <div className="px-2">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-[#16a34a]">Valor total</p>
+                <p className="mt-1.5 text-lg font-bold tabular-nums text-[#14532d]">{formatBRL(valorTotal)}</p>
+              </div>
+              <div className="px-2">
+                <p className="text-[11px] font-medium uppercase tracking-wide text-[#16a34a]">Por animal</p>
+                <p className="mt-1.5 text-lg font-bold tabular-nums text-[#14532d]">{formatBRL(mediaPorAnimal)}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col items-center gap-2 py-3 text-center">
+              <Calculator className="h-8 w-8 text-terra-300" aria-hidden />
+              <p className="text-sm text-terra-600">Preencha os campos para ver o cálculo</p>
+            </div>
+          )}
+        </div>
+
+        {erro ? (
+          <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
+            {erro}
+          </p>
+        ) : null}
+
+        <div className="flex flex-col-reverse items-stretch justify-end gap-3 pt-2 sm:flex-row sm:items-center sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            className="h-12 min-h-12 rounded-[10px] border-[1.5px] border-terra-200 text-terra-600 hover:bg-terra-50 sm:min-w-[120px]"
+            onClick={() => (onDismiss ? onDismiss() : router.back())}
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="submit"
+            disabled={!podeSalvar}
+            className={cn(
+              "h-12 min-h-12 gap-2 rounded-[10px] px-5 font-semibold",
+              "bg-verde-700 text-white hover:bg-verde-800",
+              "disabled:pointer-events-none disabled:border disabled:border-terra-200 disabled:bg-terra-100 disabled:text-terra-500 disabled:opacity-100 disabled:shadow-none disabled:hover:bg-terra-100",
+            )}
+          >
+            <CheckCircle className="h-5 w-5 shrink-0" aria-hidden />
+            Registrar venda →
+          </Button>
+        </div>
+      </form>
+    );
+  }
+
   return (
-    <form onSubmit={onSubmit} className="mx-auto flex max-w-lg flex-col gap-6 pb-28">
-      <Card className="border-emerald-100 shadow-md">
-        <CardHeader>
-          <CardTitle className="text-emerald-900">Adicionar Venda</CardTitle>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-5">
+    <form
+      onSubmit={onSubmit}
+      className={cn(
+        "mx-auto flex w-full max-w-[600px] flex-col gap-8",
+        "px-4 py-8 sm:px-0",
+      )}
+    >
+      <div className="rounded-2xl border border-terra-200 bg-white p-6 shadow-card sm:p-8">
+        <>
+          <h1 className="text-2xl font-bold tracking-tight text-terra-950">Nova Venda</h1>
+          <p className="mt-1 text-sm text-terra-600">Preencha os dados da venda</p>
+        </>
+
+        <div className="mt-8 flex flex-col gap-6">
           <div className="space-y-2">
-            <Label htmlFor="data">Data da venda</Label>
-            <Input id="data" type="date" value={date} onChange={(e) => setDate(e.target.value)} required />
+            <Label htmlFor="data-page" className="text-[13px] font-medium text-terra-800">
+              Data da venda
+            </Label>
+            <Input
+              id="data-page"
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
+              className={fieldClass}
+            />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="qtd">Quantidade de animais</Label>
+            <Label htmlFor="qtd-page" className="text-[13px] font-medium text-terra-800">
+              Quantidade de animais
+            </Label>
             <Input
-              id="qtd"
+              id="qtd-page"
               inputMode="numeric"
               placeholder="Ex.: 42"
               value={quantidadeAnimais}
               onChange={(e) => setQuantidadeAnimais(e.target.value)}
               required
+              className={fieldClass}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="bruto">Peso bruto (kg)</Label>
+            <Label htmlFor="bruto-page" className="text-[13px] font-medium text-terra-800">
+              Peso bruto (kg)
+            </Label>
             <Input
-              id="bruto"
+              id="bruto-page"
               inputMode="decimal"
               placeholder="Ex.: 12.450"
               value={pesoBruto}
               onChange={(e) => setPesoBruto(e.target.value)}
               required
+              className={fieldClass}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="liquido">Peso líquido (kg)</Label>
+            <Label htmlFor="liquido-page" className="text-[13px] font-medium text-terra-800">
+              Peso líquido (kg)
+            </Label>
             <Input
-              id="liquido"
+              id="liquido-page"
               inputMode="decimal"
               placeholder="Ex.: 11.200"
               value={pesoLiquido}
               onChange={(e) => setPesoLiquido(e.target.value)}
               required
+              className={cn(fieldClass, pesoLiquidoInvalido && "border-danger")}
             />
+            {pesoLiquidoInvalido ? (
+              <p className="mt-1 flex items-center gap-1 text-xs font-medium text-danger" role="alert">
+                <AlertCircle className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                Peso líquido deve ser menor que o bruto
+              </p>
+            ) : null}
           </div>
           <div className="space-y-2">
-            <Label htmlFor="preco">Preço da arroba (R$)</Label>
+            <Label htmlFor="preco-page" className="text-[13px] font-medium text-terra-800">
+              Preço por @ (R$)
+            </Label>
             <Input
-              id="preco"
+              id="preco-page"
               inputMode="decimal"
               placeholder="Ex.: 320"
               value={precoArroba}
               onChange={(e) => setPrecoArroba(e.target.value)}
               required
+              className={fieldClass}
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="obs">Observação (opcional)</Label>
+            <Label htmlFor="obs-page" className="text-[13px] font-medium text-terra-800">
+              Observação (opcional)
+            </Label>
             <textarea
-              id="obs"
+              id="obs-page"
               rows={3}
               placeholder="Ex.: comprador, praça, lote..."
               value={observacao}
               onChange={(e) => setObservacao(e.target.value)}
-              className="flex min-h-[96px] w-full rounded-lg border border-neutral-300 bg-white px-4 py-3 text-base text-neutral-900 shadow-sm placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+              className={cn(fieldClass, "min-h-[96px] py-3")}
             />
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <div className="rounded-xl border border-emerald-200 bg-emerald-50/80 p-4 text-base text-emerald-950">
-        {previewValido ? (
-          <p>
-            Você vai registrar <strong>{formatArrobas(arrobas)} @</strong> no valor de{" "}
-            <strong>{formatBRL(valorTotal)}</strong>.
+        <div
+          className={cn(
+            "mt-8 rounded-xl border border-verde-200 bg-verde-50 p-5 transition-opacity duration-200",
+            previewValido ? "opacity-100" : "opacity-60",
+          )}
+        >
+          <p className="text-sm font-semibold text-verde-900">Resumo da venda</p>
+          <hr className="my-3 border-verde-200" />
+          {previewValido ? (
+            <dl className="space-y-2 text-sm text-terra-800">
+              <div className="flex justify-between gap-4">
+                <dt>Arrobas calculadas</dt>
+                <dd className="tabular-money font-semibold text-terra-900">{formatArrobas(arrobas)} @</dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt>Valor total da venda</dt>
+                <dd className="tabular-money font-bold text-verde-800">{formatBRL(valorTotal)}</dd>
+              </div>
+              <div className="flex justify-between gap-4">
+                <dt>Média por animal</dt>
+                <dd className="tabular-money font-semibold text-terra-900">{formatBRL(mediaPorAnimal)}</dd>
+              </div>
+            </dl>
+          ) : (
+            <p className="text-sm text-terra-600">Preencha peso líquido, preço e quantidade para ver o resumo.</p>
+          )}
+        </div>
+
+        {erro ? (
+          <p className="mt-6 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
+            {erro}
           </p>
-        ) : (
-          <p className="text-emerald-900/80">
-            Enquanto você preenche, mostramos aqui o total de arrobas e o valor da venda.
-          </p>
-        )}
-      </div>
+        ) : null}
 
-      {erro ? (
-        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-900" role="alert">
-          {erro}
-        </p>
-      ) : null}
-
-      <div className="fixed bottom-0 left-0 right-0 border-t border-neutral-200 bg-white/95 p-4 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] backdrop-blur sm:static sm:border-0 sm:bg-transparent sm:p-0 sm:shadow-none">
-        <div className="mx-auto flex max-w-lg gap-3">
-          <Button type="button" variant="outline" className="flex-1 sm:flex-none" onClick={() => router.back()}>
-            Voltar
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-end">
+          <Button
+            type="button"
+            variant="outline"
+            className="h-[52px] min-h-[52px] border-terra-200"
+            onClick={() => (onDismiss ? onDismiss() : router.back())}
+          >
+            {onDismiss ? "Cancelar" : "Voltar"}
           </Button>
-          <Button type="submit" className="flex-[2] sm:flex-1" disabled={carregando}>
-            {carregando ? "Salvando…" : "Salvar Venda"}
+          <Button
+            type="submit"
+            disabled={!podeSalvar}
+            className={cn(
+              "h-[52px] min-h-[52px] w-full font-semibold sm:w-auto sm:min-w-[200px]",
+              "bg-verde-700 text-white hover:bg-verde-800",
+              "disabled:pointer-events-none disabled:border disabled:border-terra-200 disabled:bg-terra-100 disabled:text-terra-500 disabled:opacity-100 disabled:shadow-none disabled:hover:bg-terra-100",
+            )}
+          >
+            <CheckCircle className="h-5 w-5" aria-hidden />
+            Salvar venda
           </Button>
         </div>
       </div>

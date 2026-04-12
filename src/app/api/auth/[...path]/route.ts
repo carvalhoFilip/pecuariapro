@@ -7,39 +7,44 @@ function respostaAuthIndisponivel() {
   );
 }
 
-type RouteCtx = { params: { path: string[] } };
+type RouteCtx = { params: Promise<{ path: string[] }> };
 
 export async function GET(request: Request, ctx: RouteCtx) {
   const auth = getNeonAuthOrNull();
   if (!auth) return respostaAuthIndisponivel();
   const { GET } = auth.handler();
-  return GET(request, { params: Promise.resolve({ path: ctx.params.path }) });
+  const params = await ctx.params;
+  return GET(request, { params: Promise.resolve({ path: params.path }) });
 }
 
 export async function POST(request: Request, ctx: RouteCtx) {
   const auth = getNeonAuthOrNull();
   if (!auth) return respostaAuthIndisponivel();
   const { POST } = auth.handler();
-  return POST(request, { params: Promise.resolve({ path: ctx.params.path }) });
+  const params = await ctx.params;
+  return POST(request, { params: Promise.resolve({ path: params.path }) });
 }
 
 export async function PUT(request: Request, ctx: RouteCtx) {
   const auth = getNeonAuthOrNull();
   if (!auth) return respostaAuthIndisponivel();
   const { PUT } = auth.handler();
-  return PUT(request, { params: Promise.resolve({ path: ctx.params.path }) });
+  const params = await ctx.params;
+  return PUT(request, { params: Promise.resolve({ path: params.path }) });
 }
 
 export async function DELETE(request: Request, ctx: RouteCtx) {
   const auth = getNeonAuthOrNull();
   if (!auth) return respostaAuthIndisponivel();
   const { DELETE } = auth.handler();
-  return DELETE(request, { params: Promise.resolve({ path: ctx.params.path }) });
+  const params = await ctx.params;
+  return DELETE(request, { params: Promise.resolve({ path: params.path }) });
 }
 
 export async function PATCH(request: Request, ctx: RouteCtx) {
   const auth = getNeonAuthOrNull();
   if (!auth) return respostaAuthIndisponivel();
   const { PATCH } = auth.handler();
-  return PATCH(request, { params: Promise.resolve({ path: ctx.params.path }) });
+  const params = await ctx.params;
+  return PATCH(request, { params: Promise.resolve({ path: params.path }) });
 }

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { ArrowRight, Beef, CheckCircle, XCircle } from "lucide-react";
+import { DashboardPreview } from "@/components/landing/DashboardPreview";
 import { Button } from "@/components/ui/button";
 
 const stripeHref =
@@ -6,113 +8,140 @@ const stripeHref =
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-white text-neutral-900">
-      <header className="mx-auto flex max-w-5xl items-center justify-between px-4 py-4 sm:px-6">
-        <span className="text-lg font-bold text-emerald-800">Pecuária Pro</span>
-        <Button asChild variant="ghost" className="min-h-10 text-emerald-900">
+    <div className="min-h-screen bg-terra-50 text-terra-950">
+      <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-8">
+        <Link href="/" className="flex items-center gap-2 font-bold text-terra-950">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-verde-700 text-white">
+            <Beef className="h-5 w-5" aria-hidden />
+          </span>
+          Pecuária Pro
+        </Link>
+        <Button asChild variant="outline" className="h-11 border-terra-200 text-terra-900 hover:bg-terra-100">
           <Link href="/login">Entrar</Link>
         </Button>
       </header>
 
       <main>
-        <section className="mx-auto max-w-5xl px-4 pb-16 pt-8 sm:px-6 sm:pt-12">
-          <p className="text-sm font-medium uppercase tracking-wide text-emerald-700">Gestão financeira da fazenda</p>
-          <h1 className="mt-3 max-w-3xl text-3xl font-extrabold leading-tight text-emerald-950 sm:text-4xl lg:text-5xl">
-            Se você não controla sua arroba, você não controla seu lucro.
-          </h1>
-          <p className="mt-5 max-w-2xl text-lg text-neutral-700 sm:text-xl">
-            Registre suas vendas, veja seus custos e descubra quanto realmente está lucrando — sem planilha.
-          </p>
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            {stripeHref ? (
-              <Button asChild size="lg" className="w-full text-lg sm:w-auto">
-                <a href={stripeHref} target="_blank" rel="noopener noreferrer">
-                  Começar 7 dias grátis
-                </a>
-              </Button>
-            ) : (
-              <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-                Defina <span className="font-medium">STRIPE_PAYMENT_LINK</span> ou{" "}
-                <span className="font-medium">NEXT_PUBLIC_STRIPE_PAYMENT_LINK</span> no ambiente para abrir o
-                pagamento.
+        <section className="relative overflow-hidden bg-gradient-to-br from-terra-950 via-terra-900 to-terra-950 px-4 py-16 text-white sm:px-8 sm:py-24">
+          <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
+            <div>
+              <p className="label-caps text-verde-400">Gestão financeira da fazenda</p>
+              <h1 className="mt-4 max-w-xl text-balance text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+                Se você não controla sua arroba, você não controla seu lucro.
+              </h1>
+              <p className="mt-6 max-w-lg text-lg text-terra-400 sm:text-xl">
+                Registre vendas, acompanhe custos e veja seu lucro real — sem planilha, sem complicação.
               </p>
-            )}
-          </div>
-          <p className="mt-4 text-sm text-neutral-600">Sem cartão para testar. Cancele quando quiser.</p>
-        </section>
-
-        <section className="border-y border-neutral-200 bg-neutral-50 py-14">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6">
-            <h2 className="text-2xl font-bold text-emerald-950">Talvez isso esteja te incomodando</h2>
-            <ul className="mt-8 space-y-4 text-lg text-neutral-800">
-              <li className="flex gap-3">
-                <span aria-hidden>❌</span>
-                <span>Você vende gado, mas não sabe o lucro real por venda</span>
-              </li>
-              <li className="flex gap-3">
-                <span aria-hidden>❌</span>
-                <span>Seus custos estão espalhados em papéis e memória</span>
-              </li>
-              <li className="flex gap-3">
-                <span aria-hidden>❌</span>
-                <span>No fim do mês, você não sabe se ganhou ou perdeu</span>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-5xl px-4 py-14 sm:px-6">
-          <h2 className="text-2xl font-bold text-emerald-950">Como funciona</h2>
-          <ol className="mt-8 grid gap-8 sm:grid-cols-3">
-            <li className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-5">
-              <p className="text-sm font-semibold text-emerald-800">Passo 1</p>
-              <p className="mt-2 text-base text-neutral-800">Registre a venda em 30 segundos</p>
-            </li>
-            <li className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-5">
-              <p className="text-sm font-semibold text-emerald-800">Passo 2</p>
-              <p className="mt-2 text-base text-neutral-800">O sistema calcula arrobas e valor automaticamente</p>
-            </li>
-            <li className="rounded-xl border border-emerald-100 bg-emerald-50/50 p-5">
-              <p className="text-sm font-semibold text-emerald-800">Passo 3</p>
-              <p className="mt-2 text-base text-neutral-800">Veja seu lucro real no painel</p>
-            </li>
-          </ol>
-        </section>
-
-        <section id="preco" className="bg-emerald-950 py-16 text-white">
-          <div className="mx-auto max-w-5xl px-4 sm:px-6">
-            <h2 className="text-2xl font-bold sm:text-3xl">Preço simples</h2>
-            <p className="mt-2 text-emerald-100">Plano único — R$ 39/mês</p>
-            <ul className="mt-8 grid gap-3 text-emerald-50 sm:grid-cols-2">
-              <li>✓ Vendas ilimitadas</li>
-              <li>✓ Controle de custos</li>
-              <li>✓ Painel completo</li>
-              <li>✓ Histórico total</li>
-              <li>✓ Relatórios mensais</li>
-              <li>✓ Cálculo automático de arroba</li>
-            </ul>
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-              {stripeHref ? (
-                <Button
-                  asChild
-                  size="lg"
-                  className="w-full bg-white text-lg text-emerald-900 hover:bg-emerald-100 sm:w-auto"
-                >
-                  <a href={stripeHref} target="_blank" rel="noopener noreferrer">
-                    Começar com 7 dias grátis
-                  </a>
-                </Button>
-              ) : null}
+              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+                {stripeHref ? (
+                  <Button
+                    asChild
+                    size="lg"
+                    className="h-14 w-full bg-verde-600 px-8 text-lg font-semibold text-white hover:bg-verde-500 sm:w-auto"
+                  >
+                    <a href={stripeHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
+                      Começar 7 dias grátis
+                      <ArrowRight className="h-5 w-5" aria-hidden />
+                    </a>
+                  </Button>
+                ) : (
+                  <p className="rounded-xl border border-amber-400/40 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
+                    Defina <span className="font-medium">STRIPE_PAYMENT_LINK</span> ou{" "}
+                    <span className="font-medium">NEXT_PUBLIC_STRIPE_PAYMENT_LINK</span> no ambiente.
+                  </p>
+                )}
+              </div>
             </div>
-            <p className="mt-6 max-w-xl text-sm text-emerald-100/90">
-              Garantia: se não gostar nos primeiros 7 dias, devolvemos seu dinheiro.
-            </p>
+            <div className="relative mx-auto w-full max-w-[780px] lg:mx-0">
+              <div className="rounded-2xl border border-white/10 bg-terra-800/40 p-3 shadow-2xl backdrop-blur-sm sm:p-4">
+                <DashboardPreview />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="border-b border-terra-200 bg-white py-16 sm:py-20">
+          <div className="mx-auto max-w-6xl px-4 sm:px-8">
+            <h2 className="text-2xl font-bold tracking-tight text-terra-950 sm:text-3xl">Talvez isso esteja te incomodando</h2>
+            <ul className="mt-10 grid gap-6 md:grid-cols-3">
+              {[
+                "Você vende gado mas não sabe o lucro real",
+                "Seus custos estão no papel ou na memória",
+                "No fim do mês você não sabe se ganhou",
+              ].map((t) => (
+                <li
+                  key={t}
+                  className="flex gap-4 rounded-2xl border border-terra-200 bg-terra-50 p-6 shadow-card transition-interactive hover:border-terra-300"
+                >
+                  <XCircle className="h-6 w-6 shrink-0 text-danger" aria-hidden />
+                  <span className="text-base font-medium leading-snug text-terra-800">{t}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <section className="bg-terra-50 py-16 sm:py-20">
+          <div className="mx-auto max-w-6xl px-4 sm:px-8">
+            <h2 className="text-2xl font-bold tracking-tight text-terra-950 sm:text-3xl">Como funciona</h2>
+            <ol className="mt-12 grid gap-8 md:grid-cols-3">
+              {[
+                { n: "1", t: "Registre a venda em 30 segundos" },
+                { n: "2", t: "O sistema calcula arrobas e valor" },
+                { n: "3", t: "Veja seu lucro no painel" },
+              ].map((s) => (
+                <li key={s.n} className="relative rounded-2xl border border-terra-200 bg-white p-8 shadow-card">
+                  <span className="text-4xl font-extrabold text-verde-600">{s.n}</span>
+                  <p className="mt-4 text-base font-medium leading-relaxed text-terra-800">{s.t}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+
+        <section id="preco" className="border-t border-terra-200 bg-white py-16 sm:py-20">
+          <div className="mx-auto max-w-lg px-4 sm:px-8">
+            <div className="relative rounded-2xl border-2 border-verde-200 bg-white p-8 shadow-lg sm:p-10">
+              <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-verde-600 px-4 py-1 text-xs font-semibold uppercase tracking-wide text-white">
+                Mais popular
+              </span>
+              <p className="mt-4 text-center text-sm font-medium text-terra-600">Plano único</p>
+              <p className="mt-2 text-center">
+                <span className="text-5xl font-extrabold tracking-tight text-terra-950">R$ 39</span>
+                <span className="text-lg font-medium text-terra-600">/mês</span>
+              </p>
+              <ul className="mt-8 space-y-3 text-terra-800">
+                {[
+                  "Vendas ilimitadas",
+                  "Controle de custos",
+                  "Painel completo",
+                  "Histórico total",
+                  "Relatórios mensais",
+                  "Cálculo automático de arroba",
+                ].map((t) => (
+                  <li key={t} className="flex items-center gap-3 text-sm">
+                    <CheckCircle className="h-5 w-5 shrink-0 text-verde-600" aria-hidden />
+                    {t}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-10">
+                {stripeHref ? (
+                  <Button asChild className="h-[52px] w-full bg-verde-700 text-base font-semibold hover:bg-verde-800">
+                    <a href={stripeHref} target="_blank" rel="noopener noreferrer">
+                      Começar com 7 dias grátis
+                    </a>
+                  </Button>
+                ) : null}
+              </div>
+              <p className="mt-6 text-center text-sm text-terra-500">7 dias grátis · Sem fidelidade · Cancele quando quiser</p>
+            </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-neutral-200 py-8 text-center text-sm text-neutral-600">
-        Pecuária Pro © 2026 | Para quem cria gado de verdade.
+      <footer className="border-t border-terra-200 py-8 text-center text-sm text-terra-600">
+        Pecuária Pro © 2026 · Para quem cria gado de verdade.
       </footer>
     </div>
   );

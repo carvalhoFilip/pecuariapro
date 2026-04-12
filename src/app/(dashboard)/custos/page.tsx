@@ -1,8 +1,8 @@
-import Link from "next/link";
-import { Header } from "@/components/layout/Header";
-import { Button } from "@/components/ui/button";
+import type { LucideIcon } from "lucide-react";
+import { Package, Pill, Receipt, Syringe, Users, Wheat } from "lucide-react";
+import { NovoCustoModalButton } from "@/contexts/dashboard-quick-actions";
 import { CATEGORIAS_CUSTO } from "@/types";
-import { formatBRL, formatDataLonga } from "@/lib/format";
+import { formatBRL, formatDataCurta } from "@/lib/format";
 import { getSessionUser } from "@/lib/auth";
 import { ensureAppUser } from "@/lib/user";
 import { isUuidLike } from "@/lib/user-id";
@@ -10,8 +10,25 @@ import { getDb } from "@/db";
 import { costs } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { ExcluirRegistroButton } from "@/components/ExcluirRegistroButton";
+import { cn } from "@/lib/utils";
 
 export const dynamic = "force-dynamic";
+
+const iconPorTipo: Record<string, LucideIcon> = {
+  racao: Wheat,
+  vacina: Syringe,
+  medicamento: Pill,
+  funcionarios: Users,
+  outros: Package,
+};
+
+const iconWrapPorTipo: Record<string, string> = {
+  racao: "bg-emerald-100 text-emerald-700",
+  vacina: "bg-blue-100 text-blue-700",
+  medicamento: "bg-violet-100 text-violet-700",
+  funcionarios: "bg-orange-100 text-orange-700",
+  outros: "bg-stone-200 text-stone-600",
+};
 
 export default async function CustosPage() {
   const session = await getSessionUser();
@@ -45,55 +62,91 @@ export default async function CustosPage() {
   }
 
   return (
-    <>
-      <Header titulo="Custos" subtitulo="Organizados por categoria." />
-      <div className="flex flex-1 flex-col gap-6 px-4 py-6 sm:px-8">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          {aviso ? (
-            <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">{aviso}</p>
-          ) : null}
-          <Button asChild className="w-full sm:ml-auto sm:w-auto">
-            <Link href="/custos/novo">Adicionar custo</Link>
-          </Button>
+    <div className="mx-auto min-h-0 w-full max-w-[1280px] flex-1 bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
+      <div className="mb-6 flex flex-col gap-4 border-b border-terra-200 pb-6 sm:flex-row sm:items-start">
+        <div className="min-w-0 flex-1">
+          <h1 className="text-2xl font-bold tracking-tight text-terra-900">Custos</h1>
+          <p className="mt-0.5 text-sm text-terra-400">Organizado por categoria</p>
         </div>
-
-        {CATEGORIAS_CUSTO.map((cat) => {
-          const itens = grupos[cat.value] ?? [];
-          if (itens.length === 0) return null;
-          const subtotal = itens.reduce((s, c) => s + Number(c.valor), 0);
-          return (
-            <section key={cat.value} className="rounded-xl border border-neutral-200 bg-white shadow-sm">
-              <div className="flex flex-col gap-1 border-b border-neutral-100 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-                <h2 className="text-lg font-semibold text-emerald-950">{cat.label}</h2>
-                <p className="text-sm font-medium text-neutral-700">Subtotal: {formatBRL(subtotal)}</p>
-              </div>
-              <ul className="divide-y divide-neutral-100">
-                {itens.map((c) => (
-                  <li
-                    key={c.id}
-                    className="flex flex-col gap-2 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
-                  >
-                    <div>
-                      <p className="font-medium text-emerald-950">{formatDataLonga(new Date(c.date))}</p>
-                      {c.descricao ? <p className="text-sm text-neutral-600">{c.descricao}</p> : null}
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <p className="text-lg font-semibold text-red-800">{formatBRL(Number(c.valor))}</p>
-                      {!aviso ? <ExcluirRegistroButton id={c.id} tipo="custo" /> : null}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </section>
-          );
-        })}
-
-        {lista.length === 0 && !aviso ? (
-          <p className="rounded-xl border border-neutral-200 bg-white px-4 py-10 text-center text-neutral-600">
-            Nenhum custo ainda. Comece pelo botão acima.
+        {aviso ? (
+          <p className="w-full rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950 sm:ml-auto sm:max-w-md sm:shrink-0">
+            {aviso}
           </p>
-        ) : null}
+        ) : (
+          <div className="flex w-full justify-end sm:ml-auto sm:w-auto sm:shrink-0">
+            <NovoCustoModalButton className="h-10 shrink-0 rounded-lg bg-verde-700 px-4 font-semibold text-white hover:bg-verde-800">
+              + Adicionar custo
+            </NovoCustoModalButton>
+          </div>
+        )}
       </div>
-    </>
+
+      {!aviso ? (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          {CATEGORIAS_CUSTO.map((cat) => {
+            const itens = grupos[cat.value] ?? [];
+            if (itens.length === 0) return null;
+            const subtotal = itens.reduce((s, c) => s + Number(c.valor), 0);
+            const Icon = iconPorTipo[cat.value] ?? Package;
+            const wrap = iconWrapPorTipo[cat.value] ?? iconWrapPorTipo.outros;
+            return (
+              <section
+                key={cat.value}
+                className="overflow-hidden rounded-2xl border-[1.5px] border-terra-200 bg-white shadow-sm"
+              >
+                <div className="flex items-center justify-between gap-3 border-b border-terra-200 bg-terra-50/80 px-5 py-4">
+                  <div className="flex min-w-0 items-center gap-3">
+                    <span className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-xl", wrap)}>
+                      <Icon className="h-5 w-5" aria-hidden />
+                    </span>
+                    <h2 className="text-lg font-bold text-terra-900">{cat.label}</h2>
+                  </div>
+                  <p className="shrink-0 text-sm font-bold text-[#dc2626]">{formatBRL(subtotal)}</p>
+                </div>
+                <ul className="divide-y divide-terra-100">
+                  {itens.map((c) => (
+                    <li
+                      key={c.id}
+                      className="flex flex-col gap-2 px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between"
+                    >
+                      <div className="flex min-w-0 flex-1 flex-wrap items-baseline gap-x-3 gap-y-1">
+                        <span className="text-sm font-medium text-terra-900">
+                          {formatDataCurta(new Date(c.date))}
+                        </span>
+                        <span className="min-w-0 truncate text-sm text-terra-600">{c.descricao ?? "—"}</span>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-3">
+                        <span className="text-base font-bold tabular-nums text-[#dc2626]">
+                          {formatBRL(Number(c.valor))}
+                        </span>
+                        <ExcluirRegistroButton id={c.id} tipo="custo" />
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            );
+          })}
+        </div>
+      ) : null}
+
+      {lista.length === 0 && !aviso ? (
+        <div className="overflow-hidden rounded-2xl border-[1.5px] border-terra-200 bg-white shadow-sm">
+          <div className="flex flex-col items-center gap-4 px-5 py-16 text-center">
+            <Receipt className="h-12 w-12 text-terra-300" aria-hidden />
+            <p className="text-base font-medium text-terra-700">Nenhum custo registrado</p>
+            <p className="max-w-md text-sm leading-relaxed text-terra-400">
+              Adicione seus custos mensais para calcular o lucro real da fazenda.
+            </p>
+            <NovoCustoModalButton
+              variant="outline"
+              className="h-10 rounded-lg border-2 border-verde-600 px-4 text-sm font-semibold text-verde-800 hover:bg-verde-50"
+            >
+              + Registrar primeiro custo
+            </NovoCustoModalButton>
+          </div>
+        </div>
+      ) : null}
+    </div>
   );
 }

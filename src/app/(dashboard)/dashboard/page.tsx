@@ -1,7 +1,7 @@
-import Link from "next/link";
+import { Plus, Receipt, Scale, TrendingUp, Wallet } from "lucide-react";
 import { Header } from "@/components/layout/Header";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { NovaVendaModalButton } from "@/contexts/dashboard-quick-actions";
+import { MonthPicker } from "@/components/ui/MonthPicker";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { RevenueChart } from "@/components/dashboard/RevenueChart";
 import { RecentSales } from "@/components/dashboard/RecentSales";
@@ -9,20 +9,23 @@ import { RecentCustos } from "@/components/dashboard/RecentCustos";
 import { getNeonAuthOrNull, getSessionUser } from "@/lib/auth";
 import { ensureAppUser } from "@/lib/user";
 import { isUuidLike } from "@/lib/user-id";
-import {
-  type GraficoMes,
-  getDashboardPayload,
-  mesCorrenteUtc,
-  parseMesYYYYMM,
-  formatMesReferenciaPt,
-} from "@/lib/metrics";
-import { formatArrobas, formatBRL } from "@/lib/format";
+import { type GraficoMes, getDashboardPayload, mesCorrenteUtc, parseMesYYYYMM } from "@/lib/metrics";
+import { formatArrobas, formatBRL, formatDataSemanaLonga, formatMesNomeLowerPt } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardPage({ searchParams }: { searchParams?: { mes?: string } }) {
-  const mes =
-    searchParams?.mes && parseMesYYYYMM(searchParams.mes) ? searchParams.mes : mesCorrenteUtc();
+function pctVariacao(atual: number, anterior: number): number | undefined {
+  if (!Number.isFinite(anterior) || anterior === 0) return undefined;
+  return ((atual - anterior) / anterior) * 100;
+}
+
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ mes?: string }>;
+}) {
+  const q = await searchParams;
+  const mes = q.mes && parseMesYYYYMM(q.mes) ? q.mes : mesCorrenteUtc();
   const auth = getNeonAuthOrNull();
   const session = await getSessionUser();
 
@@ -51,83 +54,90 @@ export default async function DashboardPage({ searchParams }: { searchParams?: {
     custoRecentes = d.custoRecentes;
   }
 
-  const subtitulo = `Resumo de ${formatMesReferenciaPt(mes)}`;
+  const mesAnterior = grafico.length >= 6 ? grafico[4] : null;
+  const varFat = mesAnterior ? pctVariacao(faturamentoMes, mesAnterior.receita) : undefined;
+  const varCust = mesAnterior ? pctVariacao(custosMes, mesAnterior.custos) : undefined;
+  const varLuc = mesAnterior ? pctVariacao(lucroMes, mesAnterior.lucro) : undefined;
+  const nomeMesComparacao = mesAnterior ? formatMesNomeLowerPt(mesAnterior.mes) : undefined;
+
+  const headerDireita = podeCarregar ? (
+    <NovaVendaModalButton className="h-10 shrink-0 rounded-lg bg-verde-700 px-4 font-semibold text-white shadow-sm hover:bg-verde-800">
+      <Plus className="h-4 w-4" aria-hidden />
+      Nova Venda
+    </NovaVendaModalButton>
+  ) : undefined;
 
   return (
     <>
-      <Header titulo="Painel" subtitulo={subtitulo} />
-      <div className="flex flex-1 flex-col gap-6 px-4 py-6 sm:px-8">
+      {podeCarregar ? (
+        <header className="border-b border-terra-200 bg-terra-50 px-4 py-5 md:px-8">
+          <div className="mx-auto grid max-w-[1280px] w-full grid-cols-1 items-center gap-4 md:grid-cols-[1fr_auto_1fr] md:gap-6">
+            <div className="min-w-0 md:justify-self-start">
+              <h1 className="text-xl font-bold tracking-tight text-terra-950 sm:text-2xl">Painel</h1>
+              <p className="mt-1 text-sm text-terra-400">{formatDataSemanaLonga()}</p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3 md:justify-center">
+              <MonthPicker value={mes} rota="/dashboard" />
+            </div>
+            <div className="flex flex-wrap items-center gap-3 md:justify-end">{headerDireita}</div>
+          </div>
+        </header>
+      ) : (
+        <Header titulo="Painel" />
+      )}
+
+      <div className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col gap-6 bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
         {!podeCarregar ? (
-          <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
             Faça login com o Neon Auth ativo para ver seus números reais aqui.
           </p>
         ) : null}
 
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <form method="get" className="flex flex-wrap items-end gap-2">
-            <div className="space-y-1">
-              <label htmlFor="mes" className="text-xs font-medium text-neutral-600">
-                Mês
-              </label>
-              <input
-                id="mes"
-                name="mes"
-                type="month"
-                defaultValue={mes}
-                className="h-12 min-h-12 rounded-lg border border-neutral-300 bg-white px-3 text-base text-neutral-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-600"
+        {podeCarregar ? (
+          <>
+            <div className="grid grid-cols-2 gap-4 md:gap-6 xl:grid-cols-4">
+              <MetricCard
+                titulo="Faturamento do mês"
+                valor={formatBRL(faturamentoMes)}
+                Icon={TrendingUp}
+                variant="faturamento"
+                variacao={varFat}
+                nomeMesComparacao={nomeMesComparacao}
+              />
+              <MetricCard
+                titulo="Custos do mês"
+                valor={formatBRL(custosMes)}
+                Icon={Receipt}
+                variant="custos"
+                variacao={varCust}
+                nomeMesComparacao={nomeMesComparacao}
+              />
+              <MetricCard
+                titulo="Lucro do mês"
+                valor={formatBRL(lucroMes)}
+                Icon={Wallet}
+                variant="lucro"
+                variacao={varLuc}
+                nomeMesComparacao={nomeMesComparacao}
+                valorLucro={lucroMes}
+              />
+              <MetricCard
+                titulo="Arrobas do mês"
+                valor={`${formatArrobas(arrobasMes)} @`}
+                Icon={Scale}
+                variant="arrobas"
+                animaisVendidos={animaisMes}
               />
             </div>
-            <Button type="submit" className="min-h-12">
-              Atualizar
-            </Button>
-          </form>
-          <Button asChild variant="outline" className="min-h-12 w-full sm:w-auto">
-            <Link href="/vendas/nova">Adicionar Venda</Link>
-          </Button>
-        </div>
 
-        <div className="grid gap-4 sm:grid-cols-2">
-          <MetricCard titulo="Faturamento" valor={formatBRL(faturamentoMes)} icone="💰" cor="verde" />
-          <MetricCard titulo="Custos" valor={formatBRL(custosMes)} icone="📉" cor="vermelho" />
-          <MetricCard titulo="Lucro" valor={formatBRL(lucroMes)} icone="📈" cor="azul" />
-          <MetricCard
-            titulo="Arrobas"
-            valor={`${formatArrobas(arrobasMes)} @`}
-            icone="🐂"
-            cor="amarelo"
-          />
-        </div>
-
-        <p className="text-sm text-neutral-600">Animais vendidos no mês: {animaisMes}</p>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-emerald-950">Receita × custos × lucro</CardTitle>
-            <p className="text-sm text-neutral-600">Últimos 6 meses até o mês selecionado.</p>
-          </CardHeader>
-          <CardContent>
             <RevenueChart dados={grafico} />
-          </CardContent>
-        </Card>
 
-        <div className="grid gap-6 lg:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-emerald-950">Últimas vendas</CardTitle>
-            </CardHeader>
-            <CardContent>
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
               <RecentSales vendas={ultimasVendas} />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-emerald-950">Custos recentes</CardTitle>
-            </CardHeader>
-            <CardContent>
               <RecentCustos custos={custoRecentes} />
-            </CardContent>
-          </Card>
-        </div>
+            </div>
+          </>
+        ) : null}
       </div>
     </>
   );

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getSessionUser } from "@/lib/auth";
+import { userHasValidSubscriptionAccess } from "@/lib/subscription-access";
 import { ensureAppUser } from "@/lib/user";
 import { isUuidLike } from "@/lib/user-id";
 
@@ -38,5 +39,14 @@ export async function requireSessionWithUser(): Promise<RequireSessionResult> {
     };
   }
   const user = await ensureAppUser(session.user);
+  if (!userHasValidSubscriptionAccess(user.subscriptionStatus, user.trialEndsAt)) {
+    return {
+      ok: false,
+      response: NextResponse.json(
+        { mensagem: "Assinatura necessária para aceder a este recurso." },
+        { status: 402 },
+      ),
+    };
+  }
   return { ok: true, data: { user } };
 }

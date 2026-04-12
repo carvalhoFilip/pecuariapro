@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { AuthProvider } from "@/components/auth/AuthProvider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -18,8 +19,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className={`${inter.variable} min-h-screen font-sans antialiased`}>{children}</body>
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body
+        className={`${inter.variable} min-h-screen bg-terra-50 font-sans text-terra-950 antialiased`}
+      >
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   );
 }

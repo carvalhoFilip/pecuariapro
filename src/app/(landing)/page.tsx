@@ -25,7 +25,7 @@ export default function LandingPage() {
           <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
             <div>
               <p className="label-caps text-verde-400">Gestão financeira da fazenda</p>
-              <h1 className="mt-4 max-w-xl text-balance text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+              <h1 className="mt-4 max-w-xl text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
                 Se você não controla sua arroba, você não controla seu lucro.
               </h1>
               <p className="mt-6 max-w-lg text-lg text-terra-400 sm:text-xl">
@@ -125,11 +125,14 @@ export default function LandingPage() {
               </ul>
               <div className="mt-10">
                 {hasCheckoutConfig ? (
-                  <Button asChild className="h-[52px] w-full bg-verde-700 text-base font-semibold hover:bg-verde-800">
-                    <Link href="/pagamento">
+                  <form action="/api/stripe/checkout" method="POST">
+                    <Button
+                      type="submit"
+                      className="h-[52px] w-full bg-verde-700 text-base font-semibold hover:bg-verde-800"
+                    >
                       Começar com 7 dias grátis
-                    </Link>
-                  </Button>
+                    </Button>
+                  </form>
                 ) : null}
               </div>
               <p className="mt-6 text-center text-sm text-terra-500">7 dias grátis · Sem fidelidade · Cancele quando quiser</p>

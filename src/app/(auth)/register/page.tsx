@@ -30,7 +30,7 @@ export default async function RegisterPage({
   }
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-neutral-50 px-4 py-8">
+    <div className="flex min-h-svh items-center justify-center bg-neutral-50 px-4 py-3 sm:py-6">
       <SignUpPanel configured={configured} checkoutEmail={checkoutEmail} />
     </div>
   );

@@ -61,7 +61,16 @@ function MiniMetricCard({ label, valor, Icon, iconBox, iconColor, valorClass, fo
 
 export function Slide1Dashboard() {
   return (
-    <div style={{ width: `${100 / 3}%`, flexShrink: 0, height: "100%", overflow: "hidden", padding: 20 }}>
+    <div
+      style={{
+        width: `${100 / 3}%`,
+        flexShrink: 0,
+        height: "100%",
+        overflow: "hidden",
+        padding: 12,
+        boxSizing: "border-box",
+      }}
+    >
       <section className="space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2 border-b border-terra-200 pb-2">
           <h3 className="text-sm font-bold text-terra-950">Painel</h3>

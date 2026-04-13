@@ -21,8 +21,9 @@ function Slide2Venda() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: 24,
+        padding: 12,
         position: "relative",
+        boxSizing: "border-box",
       }}
     >
       <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)", pointerEvents: "none" }} />
@@ -31,11 +32,12 @@ function Slide2Venda() {
           position: "relative",
           background: "white",
           borderRadius: 16,
-          padding: 24,
+          padding: 16,
           width: "100%",
-          maxWidth: 380,
+          maxWidth: "min(360px, 100%)",
           boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
           zIndex: 1,
+          boxSizing: "border-box",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
@@ -166,8 +168,9 @@ function Slide3Custo() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: 24,
+        padding: 12,
         position: "relative",
+        boxSizing: "border-box",
       }}
     >
       <div style={{ position: "absolute", inset: 0, background: "rgba(0,0,0,0.3)", pointerEvents: "none" }} />
@@ -177,10 +180,11 @@ function Slide3Custo() {
           zIndex: 1,
           background: "white",
           borderRadius: 16,
-          padding: 24,
+          padding: 16,
           width: "100%",
-          maxWidth: 320,
+          maxWidth: "min(320px, 100%)",
           boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
+          boxSizing: "border-box",
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>

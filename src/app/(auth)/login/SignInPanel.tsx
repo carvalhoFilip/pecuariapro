@@ -29,8 +29,8 @@ export function SignInPanel({ configured }: { configured: boolean }) {
       <SignInForm localization={authLocalization} />
       <p className="mt-6 text-center text-sm text-neutral-600">
         Não tem conta?{" "}
-        <Link href="/register" className="font-medium text-emerald-800 underline">
-          Criar conta
+        <Link href="/pagamento?motivo=inativo" className="font-medium text-emerald-800 underline">
+          Começar assinatura
         </Link>
       </p>
       <div className="mt-4 text-center">

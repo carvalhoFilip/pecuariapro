@@ -2,8 +2,7 @@ import Link from "next/link";
 import { CheckCircle, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const checkoutHref =
-  process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? process.env.STRIPE_PAYMENT_LINK ?? "";
+const hasCheckoutConfig = Boolean(process.env.STRIPE_PRICE_ID?.trim());
 
 export const metadata = {
   title: "Assinatura | Pecuária Pro",
@@ -68,20 +67,19 @@ export default async function PagamentoPage({
           ))}
         </ul>
         <div className="mt-10 flex flex-col gap-3">
-          {checkoutHref ? (
-            <Button
-              asChild
-              size="lg"
-              className="h-[52px] w-full bg-verde-700 text-base font-semibold text-white hover:bg-verde-800"
-            >
-              <a href={checkoutHref} target="_blank" rel="noopener noreferrer">
+          {hasCheckoutConfig ? (
+            <form action="/api/stripe/checkout" method="POST">
+              <Button
+                type="submit"
+                size="lg"
+                className="h-[52px] w-full bg-verde-700 text-base font-semibold text-white hover:bg-verde-800"
+              >
                 Começar 7 dias grátis →
-              </a>
-            </Button>
+              </Button>
+            </form>
           ) : (
             <p className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
-              Configure <span className="font-medium">STRIPE_PAYMENT_LINK</span> ou{" "}
-              <span className="font-medium">NEXT_PUBLIC_STRIPE_PAYMENT_LINK</span> no ambiente.
+              Configure <span className="font-medium">STRIPE_PRICE_ID</span> no ambiente.
             </p>
           )}
           <Button asChild variant="outline" className="h-11 w-full border-terra-200">

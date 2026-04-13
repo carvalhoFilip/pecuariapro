@@ -3,8 +3,7 @@ import { ArrowRight, Beef, CheckCircle, XCircle } from "lucide-react";
 import { DashboardPreview } from "@/components/landing/DashboardPreview";
 import { Button } from "@/components/ui/button";
 
-const stripeHref =
-  process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ?? process.env.STRIPE_PAYMENT_LINK ?? "";
+const hasCheckoutConfig = Boolean(process.env.STRIPE_PRICE_ID?.trim());
 
 export default function LandingPage() {
   return (
@@ -33,21 +32,20 @@ export default function LandingPage() {
                 Registre vendas, acompanhe custos e veja seu lucro real — sem planilha, sem complicação.
               </p>
               <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
-                {stripeHref ? (
+                {hasCheckoutConfig ? (
                   <Button
                     asChild
                     size="lg"
                     className="h-14 w-full bg-verde-600 px-8 text-lg font-semibold text-white hover:bg-verde-500 sm:w-auto"
                   >
-                    <a href={stripeHref} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2">
+                    <Link href="/pagamento" className="inline-flex items-center gap-2">
                       Começar 7 dias grátis
                       <ArrowRight className="h-5 w-5" aria-hidden />
-                    </a>
+                    </Link>
                   </Button>
                 ) : (
                   <p className="rounded-xl border border-amber-400/40 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
-                    Defina <span className="font-medium">STRIPE_PAYMENT_LINK</span> ou{" "}
-                    <span className="font-medium">NEXT_PUBLIC_STRIPE_PAYMENT_LINK</span> no ambiente.
+                    Defina <span className="font-medium">STRIPE_PRICE_ID</span> no ambiente.
                   </p>
                 )}
               </div>
@@ -126,11 +124,11 @@ export default function LandingPage() {
                 ))}
               </ul>
               <div className="mt-10">
-                {stripeHref ? (
+                {hasCheckoutConfig ? (
                   <Button asChild className="h-[52px] w-full bg-verde-700 text-base font-semibold hover:bg-verde-800">
-                    <a href={stripeHref} target="_blank" rel="noopener noreferrer">
+                    <Link href="/pagamento">
                       Começar com 7 dias grátis
-                    </a>
+                    </Link>
                   </Button>
                 ) : null}
               </div>

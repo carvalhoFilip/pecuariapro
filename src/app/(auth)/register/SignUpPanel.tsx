@@ -4,7 +4,7 @@ import Link from "next/link";
 import { SignUpForm, authLocalization } from "@neondatabase/auth/react/ui";
 import { Button } from "@/components/ui/button";
 
-export function SignUpPanel({ configured }: { configured: boolean }) {
+export function SignUpPanel({ configured, checkoutEmail }: { configured: boolean; checkoutEmail: string | null }) {
   if (!configured) {
     return (
       <div className="w-full max-w-md rounded-2xl border border-neutral-200 bg-white p-8 shadow-sm">
@@ -27,11 +27,15 @@ export function SignUpPanel({ configured }: { configured: boolean }) {
 
   return (
     <div className="w-full max-w-md rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
+      <div className="mb-5 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-900">
+        Pagamento confirmado. Use o e-mail do checkout para criar a senha:
+        <span className="ml-1 font-semibold">{checkoutEmail ?? "o mesmo e-mail usado na Stripe"}</span>
+      </div>
       <h1 className="mb-6 text-2xl font-bold text-emerald-950">Criar conta</h1>
       <SignUpForm localization={authLocalization} />
       <p className="mt-6 text-center text-sm text-neutral-600">
         Já tem conta?{" "}
-        <Link href="/login" className="font-medium text-emerald-800 underline">
+        <Link href="/login?redirect=/dashboard" className="font-medium text-emerald-800 underline">
           Entrar
         </Link>
       </p>

@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { Beef } from "lucide-react";
 
 export const runtime = "edge";
 export const contentType = "image/png";
@@ -19,13 +20,10 @@ export default function AppleIcon() {
           justifyContent: "center",
           background: "#16a34a",
           color: "white",
-          fontSize: 80,
-          fontWeight: 800,
           borderRadius: 36,
-          letterSpacing: -2,
         }}
       >
-        PP
+        <Beef size={96} strokeWidth={2.25} />
       </div>
     ),
     size,

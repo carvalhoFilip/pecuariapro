@@ -1,4 +1,5 @@
 import { ImageResponse } from "next/og";
+import { Beef } from "lucide-react";
 
 export const runtime = "edge";
 export const contentType = "image/png";
@@ -19,12 +20,10 @@ export default function Icon() {
           justifyContent: "center",
           background: "linear-gradient(160deg, #14532d 0%, #16a34a 100%)",
           color: "white",
-          fontSize: 210,
-          fontWeight: 800,
-          letterSpacing: -6,
+          borderRadius: 96,
         }}
       >
-        PP
+        <Beef size={280} strokeWidth={2.25} />
       </div>
     ),
     size,

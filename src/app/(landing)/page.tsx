@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowRight, Beef, CheckCircle, XCircle } from "lucide-react";
-import { DashboardPreview } from "@/components/landing/DashboardPreview";
+import { PreviewCarousel } from "@/components/landing/PreviewCarousel";
 import { Button } from "@/components/ui/button";
 
 const hasCheckoutConfig = Boolean(process.env.STRIPE_PRICE_ID?.trim());
@@ -52,7 +52,7 @@ export default function LandingPage() {
             </div>
             <div className="relative mx-auto w-full max-w-[780px] lg:mx-0">
               <div className="rounded-2xl border border-white/10 bg-terra-800/40 p-3 shadow-2xl backdrop-blur-sm sm:p-4">
-                <DashboardPreview />
+                <PreviewCarousel />
               </div>
             </div>
           </div>

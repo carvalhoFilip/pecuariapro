@@ -21,36 +21,35 @@ export default function LandingPage() {
       </header>
 
       <main>
-        <section className="relative overflow-hidden bg-gradient-to-br from-terra-950 via-terra-900 to-terra-950 px-4 py-16 text-white sm:px-8 sm:py-24">
-          <div className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-2 lg:items-center">
+        <section className="bg-[#1c1917] px-4 py-16 md:py-24">
+          <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 lg:grid-cols-2">
             <div>
-              <p className="label-caps text-verde-400">Gestão financeira da fazenda</p>
-              <h1 className="mt-4 max-w-xl text-4xl font-bold leading-[1.1] tracking-tight sm:text-5xl lg:text-6xl">
+              <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-green-500">Gestão financeira da fazenda</p>
+              <h1 className="mb-4 max-w-xl text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
                 Se você não controla sua arroba, você não controla seu lucro.
               </h1>
-              <p className="mt-6 max-w-lg text-lg text-terra-400 sm:text-xl">
+              <p className="mb-8 max-w-lg text-base leading-relaxed text-gray-400">
                 Registre vendas, acompanhe custos e veja seu lucro real — sem planilha, sem complicação.
               </p>
-              <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
                 {hasCheckoutConfig ? (
-                  <Button
-                    asChild
-                    size="lg"
-                    className="h-14 w-full bg-verde-600 px-8 text-lg font-semibold text-white hover:bg-verde-500 sm:w-auto"
-                  >
-                    <Link href="/pagamento" className="inline-flex items-center gap-2">
-                      Começar 7 dias grátis
-                      <ArrowRight className="h-5 w-5" aria-hidden />
-                    </Link>
-                  </Button>
+                  <form action="/api/stripe/checkout" method="POST">
+                    <button
+                      type="submit"
+                      className="inline-block rounded-xl bg-green-600 px-6 py-4 text-base font-bold text-white transition-colors hover:bg-green-700"
+                    >
+                      Começar 7 dias grátis →
+                    </button>
+                  </form>
                 ) : (
                   <p className="rounded-xl border border-amber-400/40 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
                     Defina <span className="font-medium">STRIPE_PRICE_ID</span> no ambiente.
                   </p>
                 )}
               </div>
+              <p className="mt-3 text-xs text-gray-500">Sem cartão de crédito para testar</p>
             </div>
-            <div className="relative mx-auto w-full max-w-[780px] lg:mx-0">
+            <div className="hidden sm:block">
               <div className="rounded-2xl border border-white/10 bg-terra-800/40 p-3 shadow-2xl backdrop-blur-sm sm:p-4">
                 <PreviewCarousel />
               </div>

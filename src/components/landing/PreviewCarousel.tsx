@@ -316,6 +316,8 @@ export function PreviewCarousel() {
           boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
           overflow: "hidden",
           background: "#fafaf9",
+          width: "100%",
+          maxWidth: 560,
         }}
       >
         <div

@@ -51,13 +51,13 @@ export default async function PagamentoPage({
   };
 
   return (
-    <div className="flex min-h-svh items-center justify-center overflow-hidden bg-terra-50 px-4 py-3 sm:py-6">
-      <div className="w-full max-w-[440px] max-h-[calc(100svh-1.5rem)] overflow-y-auto rounded-2xl border border-terra-200 bg-white p-6 shadow-card sm:max-h-none sm:p-10">
+    <div className="flex min-h-screen items-center justify-center bg-terra-50 p-4">
+      <div className="mx-auto w-full max-w-sm rounded-2xl border border-terra-200 bg-white p-6 shadow-card">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-verde-100">
           <Lock className="h-8 w-8 text-verde-700" aria-hidden />
         </div>
         <h1 className="mt-6 text-center text-2xl font-bold tracking-tight text-terra-950">{copy.titulo}</h1>
-        <p className="mt-3 text-center text-base text-terra-600">{copy.subtitulo}</p>
+        <p className="mt-3 text-center text-sm leading-relaxed text-terra-600">{copy.subtitulo}</p>
         <ul className="mt-8 space-y-3">
           {beneficios.map((t) => (
             <li key={t} className="flex items-start gap-3 text-sm text-terra-800">
@@ -66,13 +66,13 @@ export default async function PagamentoPage({
             </li>
           ))}
         </ul>
-        <div className="mt-10 flex flex-col gap-3">
+        <div className="mt-7 flex flex-col gap-3">
           {hasCheckoutConfig ? (
             <form action="/api/stripe/checkout" method="POST">
               <Button
                 type="submit"
                 size="lg"
-                className="h-[52px] w-full bg-verde-700 text-base font-semibold text-white hover:bg-verde-800"
+                className="w-full rounded-xl bg-verde-700 py-4 text-base font-semibold text-white hover:bg-verde-800"
               >
                 Começar 7 dias grátis →
               </Button>
@@ -82,7 +82,7 @@ export default async function PagamentoPage({
               Configure <span className="font-medium">STRIPE_PRICE_ID</span> no ambiente.
             </p>
           )}
-          <Button asChild variant="outline" className="h-11 w-full border-terra-200">
+          <Button asChild variant="outline" className="w-full rounded-xl border-terra-200 py-4 text-base">
             <Link href="/">Voltar para a página inicial</Link>
           </Button>
         </div>

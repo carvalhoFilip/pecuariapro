@@ -99,7 +99,7 @@ export async function tryLinkStripeSubscriptionByEmail(userId: string, email: st
   const db = getDb();
   const customers = await stripe.customers.list({ email: normalizedEmail, limit: 1 });
   const customer = customers.data[0];
-  if (!customer || customer.deleted) return;
+  if (!customer) return;
 
   await db
     .update(users)

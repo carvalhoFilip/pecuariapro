@@ -39,12 +39,16 @@ const copyPorMotivo: Record<
   },
 };
 
+/** Mantém o UI de loading visível pelo menos este tempo (navegação landing/login → /pagamento). */
+const PAGAMENTO_MIN_LOAD_MS = 2_500;
+
 export default async function PagamentoPage({
   searchParams,
 }: {
   searchParams: Promise<{ motivo?: string }>;
 }) {
   const { motivo } = await searchParams;
+  await new Promise((resolve) => setTimeout(resolve, PAGAMENTO_MIN_LOAD_MS));
   const copy = copyPorMotivo[motivo ?? ""] ?? {
     titulo: "Acesse o Pecuária Pro",
     subtitulo: "7 dias grátis, depois R$ 39/mês. Cancele quando quiser.",
@@ -74,7 +78,7 @@ export default async function PagamentoPage({
                 size="lg"
                 className="w-full rounded-xl bg-verde-700 py-4 text-base font-semibold text-white hover:bg-verde-800"
               >
-                Começar 7 dias grátis →
+                Começar 7 dias grátis
               </Button>
             </form>
           ) : (

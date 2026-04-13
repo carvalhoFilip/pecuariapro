@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { ArrowRight, Beef, CheckCircle, XCircle } from "lucide-react";
+import { Beef, CheckCircle, XCircle } from "lucide-react";
 import { PreviewCarousel } from "@/components/landing/PreviewCarousel";
+import { PagamentoNavLink } from "@/components/navigation/PagamentoNavLink";
 import { Button } from "@/components/ui/button";
 
 const hasCheckoutConfig = Boolean(process.env.STRIPE_PRICE_ID?.trim());
@@ -33,19 +34,19 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center lg:items-start">
                 {hasCheckoutConfig ? (
-                  <Link
+                  <PagamentoNavLink
                     href="/pagamento"
+                    spinnerClassName="h-5 w-5 shrink-0 animate-spin"
                     className="inline-block min-h-12 w-full rounded-xl bg-green-600 px-6 py-3.5 text-center text-base font-bold text-white transition-colors hover:bg-green-700 sm:w-auto"
                   >
                     Começar 7 dias grátis →
-                  </Link>
+                  </PagamentoNavLink>
                 ) : (
                   <p className="rounded-xl border border-amber-400/40 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
                     Defina <span className="font-medium">STRIPE_PRICE_ID</span> no ambiente.
                   </p>
                 )}
               </div>
-              <p className="mt-3 text-xs text-gray-500">Sem cartão de crédito para testar</p>
             </div>
             <div className="mt-6 lg:mt-0">
               <div className="rounded-2xl border border-white/10 bg-terra-800/40 p-3 shadow-2xl backdrop-blur-sm sm:p-4">

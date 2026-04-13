@@ -51,8 +51,8 @@ export default async function PagamentoPage({
   };
 
   return (
-    <div className="flex min-h-screen flex-col items-center justify-center bg-terra-50 px-4 py-12">
-      <div className="w-full max-w-[440px] rounded-2xl border border-terra-200 bg-white p-8 shadow-card sm:p-10">
+    <div className="flex min-h-dvh items-center justify-center overflow-hidden bg-terra-50 px-4 py-4 sm:py-8">
+      <div className="w-full max-w-[440px] max-h-[calc(100dvh-2rem)] overflow-y-auto rounded-2xl border border-terra-200 bg-white p-6 shadow-card sm:max-h-none sm:p-10">
         <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-verde-100">
           <Lock className="h-8 w-8 text-verde-700" aria-hidden />
         </div>

@@ -14,7 +14,7 @@ function Slide2Venda() {
   return (
     <div
       style={{
-        width: `${100 / 3}%`,
+        width: "100%",
         flexShrink: 0,
         height: "100%",
         background: "#fafaf9",
@@ -73,7 +73,7 @@ function Slide2Venda() {
             { label: "Data da venda", value: "13/04/2026", valid: true },
             { label: "Qtd de animais", value: "42", valid: true },
             { label: "Peso bruto (kg)", value: "13.440", valid: true },
-            { label: "Peso líquido (kg)", value: "11.200", valid: true },
+            { label: "Peso líquido (kg)", value: "6.720", valid: true },
             { label: "Preço por @ (R$)", value: "320", valid: true },
             { label: "Observação", value: "Comprador: João", valid: false },
           ].map((field, i) => (
@@ -105,9 +105,9 @@ function Slide2Venda() {
           </div>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 8 }}>
             {[
-              { label: "Arrobas", value: "746,67 @" },
-              { label: "Valor total", value: "R$ 46.800" },
-              { label: "Por animal", value: "R$ 1.114" },
+              { label: "Arrobas", value: "448 @" },
+              { label: "Valor total", value: "R$ 143.360" },
+              { label: "Por animal", value: "R$ 3.413" },
             ].map((item, i) => (
               <div key={i}>
                 <div style={{ fontSize: 9, color: "#16a34a", marginBottom: 2 }}>{item.label}</div>
@@ -161,7 +161,7 @@ function Slide3Custo() {
   return (
     <div
       style={{
-        width: `${100 / 3}%`,
+        width: "100%",
         flexShrink: 0,
         height: "100%",
         background: "#fafaf9",
@@ -337,17 +337,21 @@ export function PreviewCarousel() {
           <div style={{ flex: 1, textAlign: "center", fontSize: 11, color: "#a8a29e" }}>pecuariapro.com.br</div>
         </div>
 
-        <div style={{ position: "relative", height: 420, overflow: "hidden" }}>
+        <div style={{ position: "relative", height: "min(420px, 68vw)", overflow: "hidden" }}>
           <div
             style={{
               display: "flex",
-              width: `${slides.length * 100}%`,
+              width: "100%",
               height: "100%",
-              transform: `translateX(-${current * (100 / slides.length)}%)`,
+              transform: `translateX(-${current * 100}%)`,
               transition: "transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
             }}
           >
-            <Slide1Dashboard />
+            <div style={{ width: "100%", flexShrink: 0, height: "100%", overflow: "hidden", display: "flex" }}>
+              <div style={{ width: "100%", height: "100%" }}>
+                <Slide1Dashboard />
+              </div>
+            </div>
             <Slide2Venda />
             <Slide3Custo />
           </div>

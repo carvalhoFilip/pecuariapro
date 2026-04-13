@@ -34,8 +34,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
   viewportFit: "cover",
   themeColor: "#16a34a",
 };
@@ -48,7 +46,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body
-        className={`${inter.variable} min-h-screen bg-terra-50 font-sans text-terra-950 antialiased`}
+        className={`${inter.variable} min-h-svh bg-terra-50 font-sans text-terra-950 antialiased`}
       >
         <AuthProvider>{children}</AuthProvider>
       </body>

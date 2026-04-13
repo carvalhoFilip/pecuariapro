@@ -58,6 +58,7 @@
 
   html,
   body {
+    min-height: 100svh;
     width: 100%;
     max-width: 100%;
     overflow-x: hidden;

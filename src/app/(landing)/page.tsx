@@ -7,7 +7,7 @@ const hasCheckoutConfig = Boolean(process.env.STRIPE_PRICE_ID?.trim());
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-terra-50 text-terra-950">
+    <div className="min-h-svh bg-terra-50 text-terra-950">
       <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-8">
         <Link href="/" className="flex items-center gap-2 font-bold text-terra-950">
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-verde-700 text-white">
@@ -21,9 +21,9 @@ export default function LandingPage() {
       </header>
 
       <main>
-        <section className="bg-[#1c1917] px-4 py-16 md:py-24">
-          <div className="mx-auto grid max-w-6xl grid-cols-1 items-center gap-10 lg:grid-cols-2">
-            <div>
+        <section className="flex min-h-svh items-center bg-[#1c1917] px-4 py-8 sm:py-10 md:min-h-0 md:py-24">
+          <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-8 sm:gap-10 lg:grid-cols-2">
+            <div className="mx-auto w-full max-w-[420px] text-center sm:max-w-xl lg:mx-0 lg:max-w-xl lg:text-left">
               <p className="mb-4 text-xs font-semibold uppercase tracking-widest text-green-500">Gestão financeira da fazenda</p>
               <h1 className="mb-4 max-w-xl text-3xl font-black leading-tight text-white sm:text-4xl lg:text-5xl">
                 Se você não controla sua arroba, você não controla seu lucro.
@@ -31,16 +31,14 @@ export default function LandingPage() {
               <p className="mb-8 max-w-lg text-base leading-relaxed text-gray-400">
                 Registre vendas, acompanhe custos e veja seu lucro real — sem planilha, sem complicação.
               </p>
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+              <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center lg:items-start">
                 {hasCheckoutConfig ? (
-                  <form action="/api/stripe/checkout" method="POST">
-                    <button
-                      type="submit"
-                      className="inline-block rounded-xl bg-green-600 px-6 py-4 text-base font-bold text-white transition-colors hover:bg-green-700"
-                    >
-                      Começar 7 dias grátis →
-                    </button>
-                  </form>
+                  <Link
+                    href="/pagamento"
+                    className="inline-block min-h-12 w-full rounded-xl bg-green-600 px-6 py-3.5 text-center text-base font-bold text-white transition-colors hover:bg-green-700 sm:w-auto"
+                  >
+                    Começar 7 dias grátis →
+                  </Link>
                 ) : (
                   <p className="rounded-xl border border-amber-400/40 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
                     Defina <span className="font-medium">STRIPE_PRICE_ID</span> no ambiente.
@@ -49,7 +47,7 @@ export default function LandingPage() {
               </div>
               <p className="mt-3 text-xs text-gray-500">Sem cartão de crédito para testar</p>
             </div>
-            <div className="hidden sm:block">
+            <div className="mt-6 lg:mt-0">
               <div className="rounded-2xl border border-white/10 bg-terra-800/40 p-3 shadow-2xl backdrop-blur-sm sm:p-4">
                 <PreviewCarousel />
               </div>

@@ -63,7 +63,7 @@ export function Slide1Dashboard() {
   return (
     <div
       style={{
-        width: `${100 / 3}%`,
+        width: "100%",
         flexShrink: 0,
         height: "100%",
         overflow: "hidden",

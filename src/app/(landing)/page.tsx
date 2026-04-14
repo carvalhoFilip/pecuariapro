@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { Beef, CheckCircle, XCircle } from "lucide-react";
 import { PreviewCarousel } from "@/components/landing/PreviewCarousel";
-import { PagamentoNavLink } from "@/components/navigation/PagamentoNavLink";
 import { Button } from "@/components/ui/button";
 
 const hasCheckoutConfig = Boolean(process.env.STRIPE_PRICE_ID?.trim());
@@ -34,13 +33,14 @@ export default function LandingPage() {
               </p>
               <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center lg:items-start">
                 {hasCheckoutConfig ? (
-                  <PagamentoNavLink
-                    href="/pagamento"
-                    spinnerClassName="h-5 w-5 shrink-0 animate-spin"
-                    className="inline-block min-h-12 w-full rounded-xl bg-green-600 px-6 py-3.5 text-center text-base font-bold text-white transition-colors hover:bg-green-700 sm:w-auto"
-                  >
-                    Começar 7 dias grátis →
-                  </PagamentoNavLink>
+                  <form action="/api/stripe/checkout" method="POST" className="w-full sm:w-auto">
+                    <Button
+                      type="submit"
+                      className="h-12 min-h-12 w-full rounded-xl border-0 bg-green-600 px-6 text-base font-bold text-white hover:bg-green-700 sm:w-auto"
+                    >
+                      Começar 7 dias grátis →
+                    </Button>
+                  </form>
                 ) : (
                   <p className="rounded-xl border border-amber-400/40 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
                     Defina <span className="font-medium">STRIPE_PRICE_ID</span> no ambiente.

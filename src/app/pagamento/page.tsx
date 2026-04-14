@@ -40,7 +40,7 @@ const copyPorMotivo: Record<
 };
 
 /** Mantém o UI de loading visível pelo menos este tempo (navegação landing/login → /pagamento). */
-const PAGAMENTO_MIN_LOAD_MS = 2_500;
+const PAGAMENTO_MIN_LOAD_MS = 2_000;
 
 export default async function PagamentoPage({
   searchParams,

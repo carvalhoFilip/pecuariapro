@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Beef, History, LayoutDashboard, Menu, TrendingUp, Wallet, X } from "lucide-react";
+import { Beef, CreditCard, History, LayoutDashboard, Menu, TrendingUp, Wallet, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SidebarSignOut } from "./SidebarSignOut";
 
@@ -12,6 +12,7 @@ const nav = [
   { href: "/vendas", label: "Vendas", Icon: TrendingUp },
   { href: "/custos", label: "Custos", Icon: Wallet },
   { href: "/historico", label: "Histórico", Icon: History },
+  { href: "/assinatura", label: "Assinatura", Icon: CreditCard },
 ] as const;
 
 function iniciais(email: string | null | undefined) {
@@ -42,6 +43,7 @@ export function Sidebar({ userEmail }: SidebarProps) {
     if (href === "/vendas") return pathname === "/vendas";
     if (href === "/custos") return pathname === "/custos";
     if (href === "/historico") return pathname.startsWith("/historico");
+    if (href === "/assinatura") return pathname === "/assinatura";
     return pathname === href || pathname.startsWith(`${href}/`);
   }
 

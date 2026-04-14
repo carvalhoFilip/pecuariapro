@@ -115,6 +115,14 @@
   }
 }
 
+/*
+ * Recharts desenha em SVG: o `* { max-width: 100% }` do base faz filhos internos
+ * herdarem 100% de um pai sem largura útil e o ResponsiveContainer pode medir 0 * ou o desenho some. Reset só dentro do container do gráfico.
+ */
+.recharts-responsive-container * {
+  max-width: none;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

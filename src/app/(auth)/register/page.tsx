@@ -10,18 +10,18 @@ export const metadata = {
 export default async function RegisterPage({
   searchParams,
 }: {
-  searchParams: Promise<{ checkout?: string; session_id?: string }>;
+  searchParams: Promise<{ checkout?: string; redirect?: string; session_id?: string }>;
 }) {
   const configured = getNeonAuthOrNull() !== null;
-  const { checkout, session_id: sessionId } = await searchParams;
+  const { checkout, redirect: redirectTo, session_id: sessionId } = await searchParams;
   const checkoutOk = checkout === "ok";
 
-  if (!checkoutOk) {
-    redirect("/pagamento?motivo=inativo");
+  if (!redirectTo) {
+    redirect("/register?redirect=/pagamento");
   }
 
   let checkoutEmail: string | null = null;
-  if (sessionId) {
+  if (checkoutOk && sessionId) {
     try {
       checkoutEmail = await getCheckoutEmail(sessionId);
     } catch (e) {
@@ -31,7 +31,7 @@ export default async function RegisterPage({
 
   return (
     <div className="flex min-h-svh items-center justify-center bg-neutral-50 px-4 py-3 sm:py-6">
-      <SignUpPanel configured={configured} checkoutEmail={checkoutEmail} />
+      <SignUpPanel configured={configured} checkoutEmail={checkoutEmail} checkoutOk={checkoutOk} />
     </div>
   );
 }

@@ -31,10 +31,10 @@ export function SignInPanel({ configured }: { configured: boolean }) {
       <p className="mt-6 text-center text-sm text-neutral-600">
         Não tem conta?{" "}
         <PagamentoNavLink
-          href="/pagamento?motivo=inativo"
+          href="/register?redirect=/pagamento"
           className="font-medium text-emerald-800 underline"
         >
-          Começar assinatura
+          Criar conta
         </PagamentoNavLink>
       </p>
       <div className="mt-4 text-center">

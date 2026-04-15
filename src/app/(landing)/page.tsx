@@ -3,8 +3,6 @@ import { Beef, CheckCircle, XCircle } from "lucide-react";
 import { PreviewCarousel } from "@/components/landing/PreviewCarousel";
 import { Button } from "@/components/ui/button";
 
-const hasCheckoutConfig = Boolean(process.env.STRIPE_PRICE_ID?.trim());
-
 export default function LandingPage() {
   return (
     <div className="min-h-svh bg-terra-50 text-terra-950">
@@ -32,20 +30,12 @@ export default function LandingPage() {
                 Registre vendas, acompanhe custos e veja seu lucro real — sem planilha, sem complicação.
               </p>
               <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-center lg:items-start">
-                {hasCheckoutConfig ? (
-                  <form action="/api/stripe/checkout" method="POST" className="w-full sm:w-auto">
-                    <Button
-                      type="submit"
-                      className="h-12 min-h-12 w-full rounded-xl border-0 bg-green-600 px-6 text-base font-bold text-white hover:bg-green-700 sm:w-auto"
-                    >
-                      Começar 7 dias grátis →
-                    </Button>
-                  </form>
-                ) : (
-                  <p className="rounded-xl border border-amber-400/40 bg-amber-950/40 px-4 py-3 text-sm text-amber-100">
-                    Defina <span className="font-medium">STRIPE_PRICE_ID</span> no ambiente.
-                  </p>
-                )}
+                <Link
+                  href="/register"
+                  className="inline-flex h-12 min-h-12 w-full items-center justify-center rounded-xl border-0 bg-green-600 px-6 text-base font-bold text-white hover:bg-green-700 sm:w-auto"
+                >
+                  Começar 7 dias grátis →
+                </Link>
               </div>
             </div>
             <div className="mt-6 lg:mt-0">
@@ -122,16 +112,12 @@ export default function LandingPage() {
                 ))}
               </ul>
               <div className="mt-10">
-                {hasCheckoutConfig ? (
-                  <form action="/api/stripe/checkout" method="POST">
-                    <Button
-                      type="submit"
-                      className="h-[52px] w-full bg-verde-700 text-base font-semibold hover:bg-verde-800"
-                    >
-                      Começar com 7 dias grátis
-                    </Button>
-                  </form>
-                ) : null}
+                <Link
+                  href="/register"
+                  className="inline-flex h-[52px] w-full items-center justify-center rounded-md bg-verde-700 px-4 text-base font-semibold text-white hover:bg-verde-800"
+                >
+                  Começar com 7 dias grátis
+                </Link>
               </div>
               <p className="mt-6 text-center text-sm text-terra-500">7 dias grátis · Sem fidelidade · Cancele quando quiser</p>
             </div>

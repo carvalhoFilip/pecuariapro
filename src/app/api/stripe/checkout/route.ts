@@ -2,10 +2,10 @@ import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe";
 
 function resolveBaseUrl(request: Request): string {
-  const fromEnv = process.env.NEXT_PUBLIC_APP_URL?.trim();
-  if (fromEnv) return fromEnv.replace(/\/$/, "");
   const origin = request.headers.get("origin");
   if (origin) return origin.replace(/\/$/, "");
+  const fromEnv = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  if (fromEnv) return fromEnv.replace(/\/$/, "");
   const fallback = new URL(request.url);
   return `${fallback.protocol}//${fallback.host}`;
 }
@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       subscription_data: {
         trial_period_days: resolveTrialDays(),
       },
-      success_url: `${baseUrl}/register?checkout=ok&session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${baseUrl}/dashboard`,
       cancel_url: `${baseUrl}/pagamento?cancelado=1`,
     });
     if (!session.url) {

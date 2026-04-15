@@ -7,11 +7,15 @@ export const metadata = {
   title: "Criar conta | Pecuária Pro",
 };
 
+/** Mantém o spinner visível por pelo menos este tempo antes do formulário. */
+const REGISTER_MIN_LOAD_MS = 1_000;
+
 export default async function RegisterPage({
   searchParams,
 }: {
   searchParams: Promise<{ checkout?: string; redirect?: string; session_id?: string }>;
 }) {
+  await new Promise((resolve) => setTimeout(resolve, REGISTER_MIN_LOAD_MS));
   const configured = getNeonAuthOrNull() !== null;
   const { checkout, redirect: redirectTo, session_id: sessionId } = await searchParams;
   const checkoutOk = checkout === "ok";

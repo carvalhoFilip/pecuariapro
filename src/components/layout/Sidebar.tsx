@@ -133,28 +133,34 @@ export function Sidebar({ userEmail }: SidebarProps) {
         <span className="w-11" aria-hidden />
       </div>
 
-      {/* Mobile drawer: overlay z-40, painel fixo 240px z-50 */}
+      {/* Overlay mobile */}
       {aberto ? (
-        <div className="fixed inset-0 z-50 md:hidden" role="dialog" aria-modal="true">
-          <button
-            type="button"
-            className="fixed inset-0 z-40 bg-black/50 transition-opacity"
-            aria-label="Fechar menu"
-            onClick={() => setAberto(false)}
-          />
-          <div className="fixed inset-y-0 left-0 z-50 flex h-full w-[240px] flex-col shadow-2xl">
-            <BlocoSidebar mobile />
-          </div>
-          <button
-            type="button"
-            className="fixed left-[240px] top-3 z-[60] flex h-10 w-10 items-center justify-center rounded-full bg-white text-terra-900 shadow-md"
-            aria-label="Fechar"
-            onClick={() => setAberto(false)}
-          >
-            <X className="h-5 w-5" />
-          </button>
-        </div>
+        <button
+          type="button"
+          className="fixed inset-0 z-40 bg-black/50 md:hidden"
+          aria-label="Fechar menu"
+          onClick={() => setAberto(false)}
+        />
       ) : null}
+
+      {/* Sidebar mobile fixa; apenas ela anima com translateX */}
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 w-[240px] bg-terra-950 transition-transform duration-300 ease-in-out md:hidden",
+          aberto ? "translate-x-0" : "-translate-x-full",
+        )}
+        aria-hidden={!aberto}
+      >
+        <BlocoSidebar mobile />
+        <button
+          type="button"
+          className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-terra-900 shadow-md"
+          aria-label="Fechar"
+          onClick={() => setAberto(false)}
+        >
+          <X className="h-5 w-5" />
+        </button>
+      </aside>
 
       {/* Desktop: fixa na viewport (evita `hidden md:flex`, que em alguns builds deixa display:none no ≥md) */}
       <div className="max-md:hidden fixed left-0 top-0 z-[100] flex h-screen w-[240px] flex-col overflow-x-hidden">

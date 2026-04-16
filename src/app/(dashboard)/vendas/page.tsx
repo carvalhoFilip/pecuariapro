@@ -1,7 +1,8 @@
 import { Beef, Plus } from "lucide-react";
-import { VendasPageHeader } from "@/components/vendas/VendasPageHeader";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { NovaVendaModalButton } from "@/contexts/dashboard-quick-actions";
+import { MonthPicker } from "@/components/ui/MonthPicker";
 import { formatArrobas, formatBRL, formatDataDiaMesAnoPt } from "@/lib/format";
 import { getSessionUser } from "@/lib/auth";
 import { ensureAppUser } from "@/lib/user";
@@ -94,12 +95,26 @@ export default async function VendasPage({
         </>
       ) : (
         <>
-          <VendasPageHeader
-            subtitulo={subtitulo}
-            subtituloClassName={n === 0 ? "text-terra-400" : "text-terra-600"}
-            mesPickerValue={mesPickerValue}
-            mostrarLinkTodas={Boolean(mesFiltro)}
-          />
+          <div className="mb-6 border-b border-terra-200 pb-6">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0">
+                <h1 className="text-2xl font-bold tracking-tight text-terra-900">Vendas</h1>
+                <p className={cn("mt-0.5 text-sm", n === 0 ? "text-terra-400" : "text-terra-600")}>{subtitulo}</p>
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <MonthPicker value={mesPickerValue} rota="/vendas" />
+                {Boolean(mesFiltro) ? (
+                  <Link href="/vendas" className="text-sm font-semibold text-verde-700 transition-interactive hover:text-verde-800">
+                    Ver todas
+                  </Link>
+                ) : null}
+                <NovaVendaModalButton className="h-10 shrink-0 rounded-lg bg-verde-700 px-4 font-semibold text-white hover:bg-verde-800">
+                  <Plus className="h-4 w-4" aria-hidden />
+                  Adicionar Venda
+                </NovaVendaModalButton>
+              </div>
+            </div>
+          </div>
 
           {lista.length === 0 ? (
             <div className="overflow-hidden rounded-2xl border-[1.5px] border-terra-200 bg-white shadow-sm">
@@ -120,8 +135,8 @@ export default async function VendasPage({
             </div>
           ) : (
             <div className="overflow-hidden rounded-2xl border-[1.5px] border-terra-200 bg-white shadow-sm">
-              <div className="min-w-0 overflow-x-auto">
-                <table className="w-full min-w-[720px] text-left text-sm">
+              <div className="w-full overflow-x-auto">
+                <table className="w-full min-w-0 table-fixed text-left text-sm">
                   <thead>
                     <tr className="border-b-[1.5px] border-terra-200 bg-terra-50">
                       <th className="px-5 py-3 text-[11px] font-medium uppercase tracking-wide text-terra-500">

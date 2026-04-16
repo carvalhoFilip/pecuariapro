@@ -68,10 +68,10 @@ export default async function DashboardPage({
   ) : undefined;
 
   return (
-    <div className="w-full overflow-x-hidden">
+    <div className="mx-auto min-h-0 w-full max-w-[1280px] flex-1 bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
       {podeCarregar ? (
-        <header className="overflow-x-hidden border-b border-terra-200 bg-terra-50 px-4 py-5 md:px-8">
-          <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <header className="mb-6 border-b border-terra-200 pb-6">
+          <div className="flex w-full flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="min-w-0">
               <h1 className="text-xl font-bold tracking-tight text-terra-950 sm:text-2xl">Painel</h1>
               <p className="mt-1 text-sm text-terra-400">{formatDataSemanaLonga()}</p>
@@ -86,7 +86,7 @@ export default async function DashboardPage({
         <Header titulo="Painel" />
       )}
 
-      <div className="mx-auto min-h-0 w-full max-w-[1280px] flex-1 bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
+      <div className="flex flex-col gap-6">
         {!podeCarregar ? (
           <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
             Faça login com o Neon Auth ativo para ver seus números reais aqui.

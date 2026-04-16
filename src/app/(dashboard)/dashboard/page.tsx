@@ -68,7 +68,7 @@ export default async function DashboardPage({
   ) : undefined;
 
   return (
-    <>
+    <div className="w-full overflow-x-hidden">
       {podeCarregar ? (
         <header className="overflow-x-hidden border-b border-terra-200 bg-terra-50 px-4 py-5 md:px-8">
           <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -139,6 +139,6 @@ export default async function DashboardPage({
           </div>
         ) : null}
       </div>
-    </>
+    </div>
   );
 }

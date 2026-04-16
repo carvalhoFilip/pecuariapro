@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Beef, CreditCard, History, LayoutDashboard, Menu, TrendingUp, Wallet, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SidebarSignOut } from "./SidebarSignOut";
@@ -33,40 +33,10 @@ export type SidebarProps = {
 export function Sidebar({ userEmail }: SidebarProps) {
   const pathname = usePathname();
   const [aberto, setAberto] = useState(false);
-  const touchStartX = useRef(0);
-  const touchStartY = useRef(0);
-  const edgeSwipeActive = useRef(false);
 
   useEffect(() => {
     setAberto(false);
   }, [pathname]);
-
-  const onEdgeTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
-    const touch = e.touches[0];
-    if (!touch) return;
-    touchStartX.current = touch.clientX;
-    touchStartY.current = touch.clientY;
-    edgeSwipeActive.current = true;
-    e.preventDefault();
-  };
-
-  const onEdgeTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!edgeSwipeActive.current) return;
-    e.preventDefault();
-  };
-
-  const onEdgeTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
-    if (!edgeSwipeActive.current) return;
-    const touch = e.changedTouches[0];
-    if (!touch) return;
-    const deltaX = touch.clientX - touchStartX.current;
-    const deltaY = Math.abs(touch.clientY - touchStartY.current);
-    if (deltaX > 50 && deltaY < 50) {
-      setAberto(true);
-    }
-    edgeSwipeActive.current = false;
-    e.preventDefault();
-  };
 
   function linkAtivo(href: string) {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -146,17 +116,6 @@ export function Sidebar({ userEmail }: SidebarProps) {
 
   return (
     <>
-      {/* Captura swipe da borda esquerda no mobile para abrir sidebar e bloquear back-swipe do browser */}
-      {!aberto ? (
-        <div
-          className="fixed inset-y-0 left-0 z-30 w-6 touch-none md:hidden"
-          onTouchStart={onEdgeTouchStart}
-          onTouchMove={onEdgeTouchMove}
-          onTouchEnd={onEdgeTouchEnd}
-          aria-hidden
-        />
-      ) : null}
-
       {/* Mobile top bar */}
       <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-terra-200 bg-terra-50 px-4 md:hidden">
         <button

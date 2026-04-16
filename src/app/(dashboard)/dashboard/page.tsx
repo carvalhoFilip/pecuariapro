@@ -68,7 +68,7 @@ export default async function DashboardPage({
   ) : undefined;
 
   return (
-    <div className="w-full min-w-0 overflow-x-hidden">
+    <>
       {podeCarregar ? (
         <header className="overflow-x-hidden border-b border-terra-200 bg-terra-50 px-4 py-5 md:px-8">
           <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -86,7 +86,7 @@ export default async function DashboardPage({
         <Header titulo="Painel" />
       )}
 
-      <div className="mx-auto flex w-full min-w-0 max-w-[1280px] flex-1 flex-col gap-6 overflow-x-hidden bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
+      <div className="mx-auto min-h-0 w-full max-w-[1280px] flex-1 bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
         {!podeCarregar ? (
           <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
             Faça login com o Neon Auth ativo para ver seus números reais aqui.
@@ -94,7 +94,7 @@ export default async function DashboardPage({
         ) : null}
 
         {podeCarregar ? (
-          <>
+          <div className="flex flex-col gap-6">
             <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 [&>*]:min-w-0">
               <MetricCard
                 titulo="Faturamento do mês"
@@ -136,9 +136,9 @@ export default async function DashboardPage({
               <RecentSales vendas={ultimasVendas} />
               <RecentCustos custos={custoRecentes} />
             </div>
-          </>
+          </div>
         ) : null}
       </div>
-    </div>
+    </>
   );
 }

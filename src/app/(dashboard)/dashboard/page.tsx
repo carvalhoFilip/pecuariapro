@@ -71,15 +71,15 @@ export default async function DashboardPage({
     <div className="mx-auto min-h-0 w-full max-w-[1280px] flex-1 bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
       {podeCarregar ? (
         <header className="mb-6 border-b border-terra-200 pb-6">
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-start justify-between gap-4">
             <div className="min-w-0">
               <h1 className="text-xl font-bold tracking-tight text-terra-950 sm:text-2xl">Painel</h1>
               <p className="mt-1 text-sm text-terra-400">{formatDataSemanaLonga()}</p>
             </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <MonthPicker value={mes} rota="/dashboard" />
-              {headerDireita}
-            </div>
+            <div className="shrink-0">{headerDireita}</div>
+          </div>
+          <div className="mt-3">
+            <MonthPicker value={mes} rota="/dashboard" />
           </div>
         </header>
       ) : (

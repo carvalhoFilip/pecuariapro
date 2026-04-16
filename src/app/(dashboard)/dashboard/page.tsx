@@ -68,9 +68,9 @@ export default async function DashboardPage({
   ) : undefined;
 
   return (
-    <>
+    <div className="w-full min-w-0 overflow-x-hidden">
       {podeCarregar ? (
-        <header className="border-b border-terra-200 bg-terra-50 px-4 py-5 md:px-8">
+        <header className="overflow-x-hidden border-b border-terra-200 bg-terra-50 px-4 py-5 md:px-8">
           <div className="mx-auto grid max-w-[1280px] w-full grid-cols-1 items-center gap-4 md:grid-cols-[1fr_auto_1fr] md:gap-6">
             <div className="min-w-0 md:justify-self-start">
               <h1 className="text-xl font-bold tracking-tight text-terra-950 sm:text-2xl">Painel</h1>
@@ -78,15 +78,16 @@ export default async function DashboardPage({
             </div>
             <div className="flex flex-wrap items-center gap-3 md:justify-center">
               <MonthPicker value={mes} rota="/dashboard" />
+              <div className="md:hidden">{headerDireita}</div>
             </div>
-            <div className="flex flex-wrap items-center gap-3 md:justify-end">{headerDireita}</div>
+            <div className="hidden flex-wrap items-center gap-3 md:flex md:justify-end">{headerDireita}</div>
           </div>
         </header>
       ) : (
         <Header titulo="Painel" />
       )}
 
-      <div className="mx-auto flex w-full max-w-[1280px] flex-1 flex-col gap-6 bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
+      <div className="mx-auto flex w-full min-w-0 max-w-[1280px] flex-1 flex-col gap-6 overflow-x-hidden bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
         {!podeCarregar ? (
           <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
             Faça login com o Neon Auth ativo para ver seus números reais aqui.
@@ -139,6 +140,6 @@ export default async function DashboardPage({
           </>
         ) : null}
       </div>
-    </>
+    </div>
   );
 }

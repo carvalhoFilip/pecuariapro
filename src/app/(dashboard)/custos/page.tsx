@@ -63,7 +63,7 @@ export default async function CustosPage() {
 
   return (
     <div className="mx-auto min-h-0 w-full max-w-[1280px] flex-1 bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
-      <div className="mb-6 flex flex-col gap-4 border-b border-terra-200 pb-6 sm:flex-row sm:items-start">
+      <div className="mb-6 flex items-start justify-between gap-4 border-b border-terra-200 pb-6">
         <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-bold tracking-tight text-terra-900">Custos</h1>
           <p className="mt-0.5 text-sm text-terra-400">Organizado por categoria</p>
@@ -73,7 +73,7 @@ export default async function CustosPage() {
             {aviso}
           </p>
         ) : (
-          <div className="flex w-full justify-end sm:ml-auto sm:w-auto sm:shrink-0">
+          <div className="flex shrink-0">
             <NovoCustoModalButton className="h-10 shrink-0 rounded-lg bg-verde-700 px-4 font-semibold text-white hover:bg-verde-800">
               <Plus className="h-4 w-4" aria-hidden />
               Adicionar custo

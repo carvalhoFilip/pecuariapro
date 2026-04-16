@@ -35,54 +35,38 @@ export function Sidebar({ userEmail }: SidebarProps) {
   const [aberto, setAberto] = useState(false);
   const touchStartX = useRef(0);
   const touchStartY = useRef(0);
-  const edgeSwipeCandidate = useRef(false);
+  const edgeSwipeActive = useRef(false);
 
   useEffect(() => {
     setAberto(false);
   }, [pathname]);
 
-  useEffect(() => {
-    const handleTouchStart = (e: TouchEvent) => {
-      const touch = e.touches[0];
-      if (!touch) return;
-      touchStartX.current = touch.clientX;
-      touchStartY.current = touch.clientY;
-      edgeSwipeCandidate.current = touch.clientX < 30;
-    };
+  const onEdgeTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    const touch = e.touches[0];
+    if (!touch) return;
+    touchStartX.current = touch.clientX;
+    touchStartY.current = touch.clientY;
+    edgeSwipeActive.current = true;
+    e.preventDefault();
+  };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (!edgeSwipeCandidate.current) return;
-      const touch = e.touches[0];
-      if (!touch) return;
-      const deltaX = touch.clientX - touchStartX.current;
-      const deltaY = Math.abs(touch.clientY - touchStartY.current);
-      if (deltaX > 20 && deltaY < 50) {
-        e.preventDefault();
-      }
-    };
+  const onEdgeTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!edgeSwipeActive.current) return;
+    e.preventDefault();
+  };
 
-    const handleTouchEnd = (e: TouchEvent) => {
-      const touch = e.changedTouches[0];
-      if (!touch) return;
-      const deltaX = touch.clientX - touchStartX.current;
-      const deltaY = Math.abs(touch.clientY - touchStartY.current);
-      if (edgeSwipeCandidate.current && deltaX > 50 && deltaY < 50) {
-        e.preventDefault();
-        setAberto(true);
-      }
-      edgeSwipeCandidate.current = false;
-    };
-
-    document.addEventListener("touchstart", handleTouchStart, { passive: true });
-    document.addEventListener("touchmove", handleTouchMove, { passive: false });
-    document.addEventListener("touchend", handleTouchEnd, { passive: false });
-
-    return () => {
-      document.removeEventListener("touchstart", handleTouchStart);
-      document.removeEventListener("touchmove", handleTouchMove);
-      document.removeEventListener("touchend", handleTouchEnd);
-    };
-  }, []);
+  const onEdgeTouchEnd = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!edgeSwipeActive.current) return;
+    const touch = e.changedTouches[0];
+    if (!touch) return;
+    const deltaX = touch.clientX - touchStartX.current;
+    const deltaY = Math.abs(touch.clientY - touchStartY.current);
+    if (deltaX > 50 && deltaY < 50) {
+      setAberto(true);
+    }
+    edgeSwipeActive.current = false;
+    e.preventDefault();
+  };
 
   function linkAtivo(href: string) {
     if (href === "/dashboard") return pathname === "/dashboard";
@@ -162,6 +146,17 @@ export function Sidebar({ userEmail }: SidebarProps) {
 
   return (
     <>
+      {/* Captura swipe da borda esquerda no mobile para abrir sidebar e bloquear back-swipe do browser */}
+      {!aberto ? (
+        <div
+          className="fixed inset-y-0 left-0 z-30 w-6 touch-none md:hidden"
+          onTouchStart={onEdgeTouchStart}
+          onTouchMove={onEdgeTouchMove}
+          onTouchEnd={onEdgeTouchEnd}
+          aria-hidden
+        />
+      ) : null}
+
       {/* Mobile top bar */}
       <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-terra-200 bg-terra-50 px-4 md:hidden">
         <button

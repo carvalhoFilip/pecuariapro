@@ -85,10 +85,12 @@ export default async function VendasPage({
             <h1 className="text-2xl font-bold tracking-tight text-terra-900">Vendas</h1>
           </div>
           <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">{aviso}</p>
-          <NovaVendaModalButton className="mt-4 h-10 rounded-lg bg-verde-700 px-4 font-semibold text-white hover:bg-verde-800">
-            <Plus className="h-4 w-4" aria-hidden />
-            Adicionar Venda
-          </NovaVendaModalButton>
+          <div className="mt-4 flex justify-end">
+            <NovaVendaModalButton className="h-10 rounded-lg bg-verde-700 px-4 font-semibold text-white hover:bg-verde-800">
+              <Plus className="h-4 w-4" aria-hidden />
+              Adicionar Venda
+            </NovaVendaModalButton>
+          </div>
         </>
       ) : (
         <>

@@ -71,16 +71,15 @@ export default async function DashboardPage({
     <div className="w-full min-w-0 overflow-x-hidden">
       {podeCarregar ? (
         <header className="overflow-x-hidden border-b border-terra-200 bg-terra-50 px-4 py-5 md:px-8">
-          <div className="mx-auto grid max-w-[1280px] w-full grid-cols-1 items-center gap-4 md:grid-cols-[1fr_auto_1fr] md:gap-6">
-            <div className="min-w-0 md:justify-self-start">
+          <div className="mx-auto flex w-full max-w-[1280px] flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="min-w-0">
               <h1 className="text-xl font-bold tracking-tight text-terra-950 sm:text-2xl">Painel</h1>
               <p className="mt-1 text-sm text-terra-400">{formatDataSemanaLonga()}</p>
             </div>
-            <div className="flex flex-wrap items-center gap-3 md:justify-center">
+            <div className="flex w-full items-center justify-between gap-3 md:w-auto md:justify-end">
               <MonthPicker value={mes} rota="/dashboard" />
-              <div className="md:hidden">{headerDireita}</div>
+              {headerDireita}
             </div>
-            <div className="hidden flex-wrap items-center gap-3 md:flex md:justify-end">{headerDireita}</div>
           </div>
         </header>
       ) : (

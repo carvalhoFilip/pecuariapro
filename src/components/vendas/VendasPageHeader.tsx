@@ -21,16 +21,18 @@ export function VendasPageHeader({ subtitulo, subtituloClassName, mesPickerValue
         <h1 className="text-2xl font-bold tracking-tight text-terra-900">Vendas</h1>
         <p className={cn("mt-0.5 text-sm", subtituloClassName ?? "text-terra-400")}>{subtitulo}</p>
       </div>
-      <div className="flex flex-wrap items-center gap-3">
-        <MonthPicker value={mesPickerValue} rota="/vendas" />
-        {mostrarLinkTodas ? (
-          <Link
-            href="/vendas"
-            className="text-sm font-semibold text-verde-700 transition-interactive hover:text-verde-800"
-          >
-            Ver todas
-          </Link>
-        ) : null}
+      <div className="flex w-full items-center justify-between gap-3 md:w-auto md:justify-start">
+        <div className="flex min-w-0 items-center gap-3">
+          <MonthPicker value={mesPickerValue} rota="/vendas" />
+          {mostrarLinkTodas ? (
+            <Link
+              href="/vendas"
+              className="text-sm font-semibold text-verde-700 transition-interactive hover:text-verde-800"
+            >
+              Ver todas
+            </Link>
+          ) : null}
+        </div>
         <NovaVendaModalButton className="h-10 shrink-0 rounded-lg bg-verde-700 px-4 font-semibold text-white hover:bg-verde-800">
           <Plus className="h-4 w-4" aria-hidden />
           Adicionar Venda

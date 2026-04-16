@@ -64,6 +64,7 @@
   * {
     box-sizing: border-box;
     max-width: 100%;
+    -webkit-overflow-scrolling: touch;
   }
 
   img,
@@ -119,6 +120,18 @@
     background: #d4d4d0;
     border-radius: 4px;
   }
+}
+
+/* Zona de borda esquerda — bloquear gesto de swipe */
+body::before {
+  content: "";
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 20px;
+  height: 100vh;
+  z-index: 9999;
+  pointer-events: none;
 }
 
 /*

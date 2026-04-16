@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
+import { PreventSwipeBack } from "@/components/layout/PreventSwipeBack";
 import { DashboardQuickActionsProvider } from "@/contexts/dashboard-quick-actions";
 import { getNeonAuthOrNull, getSessionUser } from "@/lib/auth";
 import { paywallRedirectQuery, userHasValidSubscriptionAccess } from "@/lib/subscription-access";
@@ -30,6 +31,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <DashboardQuickActionsProvider>
+      <PreventSwipeBack />
       <div className="min-h-screen w-full bg-terra-50">
         <Sidebar userEmail={userEmail} />
         <div className="dashboard-content md:pl-[240px] min-h-screen w-full overflow-x-hidden overscroll-none">

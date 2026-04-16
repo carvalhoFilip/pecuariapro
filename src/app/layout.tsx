@@ -44,9 +44,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR" suppressHydrationWarning className="overflow-x-clip">
       <body
-        className={`${inter.variable} min-h-svh bg-terra-50 font-sans text-terra-950 antialiased`}
+        className={`${inter.variable} min-h-svh touch-pan-y overflow-x-clip bg-terra-50 font-sans text-terra-950 antialiased`}
       >
         <AuthProvider>{children}</AuthProvider>
       </body>

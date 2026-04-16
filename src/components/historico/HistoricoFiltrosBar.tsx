@@ -13,7 +13,7 @@ type Props = {
 };
 
 const inputClass =
-  "h-11 w-full min-w-0 rounded-xl border-[1.5px] border-terra-200 bg-white px-3 text-sm text-terra-900 transition-interactive focus:border-verde-600 focus:outline-none focus:ring-[3px] focus:ring-[rgba(22,163,74,0.1)]";
+  "box-border h-11 w-full min-w-0 max-w-full rounded-xl border-[1.5px] border-terra-200 bg-white px-3 py-0 text-sm leading-normal text-terra-900 transition-interactive [color-scheme:light] focus:border-verde-600 focus:outline-none focus:ring-[3px] focus:ring-[rgba(22,163,74,0.1)]";
 
 export function HistoricoFiltrosBar({
   mesReferencia,
@@ -44,8 +44,8 @@ export function HistoricoFiltrosBar({
           action="/historico"
           className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-end sm:gap-4"
         >
-          <div className="grid min-w-0 flex-1 grid-cols-2 gap-3">
-            <div className="min-w-0">
+          <div className="grid min-w-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
+            <div className="min-w-0 max-w-full">
               <label htmlFor="historico-inicio" className="mb-1 block text-xs font-medium text-terra-600">
                 Início
               </label>
@@ -59,7 +59,7 @@ export function HistoricoFiltrosBar({
                 className={inputClass}
               />
             </div>
-            <div className="min-w-0">
+            <div className="min-w-0 max-w-full">
               <label htmlFor="historico-fim" className="mb-1 block text-xs font-medium text-terra-600">
                 Fim
               </label>

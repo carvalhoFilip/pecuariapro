@@ -61,14 +61,14 @@ export function Modal({
       role="presentation"
       onClick={onClose}
     >
-      <div className="flex min-h-[100dvh] w-full items-start justify-center overflow-y-auto px-4 py-4 sm:items-center sm:px-6 sm:py-8">
+      <div className="flex min-h-[100dvh] w-full min-w-0 max-w-[100vw] items-start justify-center overflow-x-hidden overflow-y-auto px-4 py-4 sm:items-center sm:px-6 sm:py-8">
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
           onClick={(e) => e.stopPropagation()}
           className={cn(
-            "animate-modal-in mx-auto flex w-full max-h-[min(90dvh,90vh)] flex-col overflow-hidden rounded-2xl border border-terra-200 bg-white shadow-2xl",
+            "animate-modal-in mx-auto flex w-full min-w-0 max-h-[min(90dvh,90vh)] flex-col overflow-hidden rounded-2xl border border-terra-200 bg-white shadow-2xl",
             maxWidthClass,
             className,
           )}
@@ -96,7 +96,7 @@ export function Modal({
               <X className="h-5 w-5" aria-hidden />
             </button>
           </div>
-          <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-6 pb-6 pt-5 sm:px-8 sm:pb-8 sm:pt-6 [scrollbar-gutter:stable]">
+          <div className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-6 pb-6 pt-5 sm:px-8 sm:pb-8 sm:pt-6 [scrollbar-gutter:stable]">
             {children}
           </div>
         </div>

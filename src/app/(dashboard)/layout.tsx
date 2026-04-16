@@ -30,9 +30,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
 
   return (
     <DashboardQuickActionsProvider>
-      <div className="min-h-screen bg-terra-50">
+      <div className="min-h-screen w-full max-w-[100vw] overflow-x-clip bg-terra-50 touch-pan-y">
         <Sidebar userEmail={userEmail} />
-        <div className="min-h-screen md:pl-[240px]">{children}</div>
+        <div className="min-h-screen w-full min-w-0 max-w-[100vw] overflow-x-clip md:pl-[240px]">{children}</div>
       </div>
     </DashboardQuickActionsProvider>
   );

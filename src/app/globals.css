@@ -61,8 +61,14 @@
     min-height: 100svh;
     width: 100%;
     max-width: 100%;
-    overflow-x: hidden;
+    overflow-x: clip;
     overscroll-behavior-x: none;
+    overscroll-behavior-y: auto;
+  }
+
+  input[type="date"] {
+    color-scheme: light;
+    max-width: 100%;
   }
 
   body {

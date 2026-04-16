@@ -30,7 +30,13 @@ const fieldClass =
   "h-12 min-h-[48px] rounded-[10px] border-[1.5px] border-terra-200 bg-white px-4 text-base text-terra-900 shadow-sm transition-interactive placeholder:text-terra-400 focus:border-verde-600 focus:outline-none focus:ring-2 focus:ring-verde-600/20";
 
 const modalInput =
-  "h-11 w-full rounded-[10px] border-[1.5px] border-terra-200 bg-white px-3 pr-10 text-[15px] text-terra-900 shadow-sm transition-all placeholder:text-terra-400 focus:border-verde-600 focus:outline-none focus:ring-[3px] focus:ring-[rgba(22,163,74,0.1)]";
+  "h-11 w-full min-w-0 max-w-full rounded-[10px] border-[1.5px] border-terra-200 bg-white px-3 pr-10 text-[15px] text-terra-900 shadow-sm transition-all placeholder:text-terra-400 focus:border-verde-600 focus:outline-none focus:ring-[3px] focus:ring-[rgba(22,163,74,0.1)]";
+
+/** `type="date"` nativo: evita `Input` com `flex`/`min-h-12` que estoura largura no mobile WebKit. */
+const modalDateInput = cn(
+  modalInput,
+  "box-border max-h-11 min-h-11 py-0 leading-none [color-scheme:light]",
+);
 
 const modalLabel = "mb-1.5 block text-xs font-medium text-terra-700";
 
@@ -126,7 +132,7 @@ export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) 
 
   if (titleless) {
     return (
-      <form onSubmit={onSubmit} className="flex w-full flex-col gap-5">
+      <form onSubmit={onSubmit} className="flex w-full min-w-0 max-w-full flex-col gap-5 overflow-x-hidden">
         <div
           className="flex justify-center gap-2 py-0.5"
           aria-label={`${progressFilled} de 5 campos obrigatórios preenchidos`}
@@ -139,19 +145,19 @@ export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) 
           ))}
         </div>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div>
+        <div className="grid min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 [&>*]:min-w-0">
+          <div className="min-w-0 max-w-full">
             <Label htmlFor="data" className={modalLabel}>
               Data da venda
             </Label>
-            <div className="relative">
-              <Input
+            <div className="relative min-w-0 max-w-full">
+              <input
                 id="data"
                 type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 required
-                className={cn(modalInput, "pr-10")}
+                className={modalDateInput}
               />
               {date ? (
                 <CheckCircle
@@ -161,11 +167,11 @@ export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) 
               ) : null}
             </div>
           </div>
-          <div>
+          <div className="min-w-0 max-w-full">
             <Label htmlFor="qtd" className={modalLabel}>
               Qtd de animais
             </Label>
-            <div className="relative">
+            <div className="relative min-w-0 max-w-full">
               <Input
                 id="qtd"
                 inputMode="numeric"
@@ -183,11 +189,11 @@ export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) 
               ) : null}
             </div>
           </div>
-          <div>
+          <div className="min-w-0 max-w-full">
             <Label htmlFor="bruto" className={modalLabel}>
               Peso bruto (kg)
             </Label>
-            <div className="relative">
+            <div className="relative min-w-0 max-w-full">
               <Input
                 id="bruto"
                 inputMode="decimal"
@@ -205,11 +211,11 @@ export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) 
               ) : null}
             </div>
           </div>
-          <div>
+          <div className="min-w-0 max-w-full">
             <Label htmlFor="liquido" className={modalLabel}>
               Peso líquido (kg)
             </Label>
-            <div className="relative">
+            <div className="relative min-w-0 max-w-full">
               <Input
                 id="liquido"
                 inputMode="decimal"
@@ -237,11 +243,11 @@ export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) 
               </p>
             ) : null}
           </div>
-          <div>
+          <div className="min-w-0 max-w-full">
             <Label htmlFor="preco" className={modalLabel}>
               Preço por @ (R$)
             </Label>
-            <div className="relative">
+            <div className="relative min-w-0 max-w-full">
               <Input
                 id="preco"
                 inputMode="decimal"
@@ -259,7 +265,7 @@ export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) 
               ) : null}
             </div>
           </div>
-          <div>
+          <div className="min-w-0 max-w-full">
             <Label htmlFor="obs" className={modalLabel}>
               Observação <span className="font-normal text-terra-400">(opcional)</span>
             </Label>

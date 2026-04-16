@@ -63,7 +63,7 @@ export function MetricCard({
   return (
     <div
       className={cn(
-        "rounded-2xl border-[1.5px] border-[#e7e5e4] bg-white px-6 py-5 shadow-[0_1px_4px_rgba(0,0,0,0.05)]",
+        "min-w-0 overflow-hidden rounded-2xl border-[1.5px] border-[#e7e5e4] bg-white px-4 py-5 shadow-[0_1px_4px_rgba(0,0,0,0.05)] sm:px-6",
         lucroBorder,
       )}
     >
@@ -78,7 +78,7 @@ export function MetricCard({
         </span>
       </div>
       <p className="mt-4 text-[11px] font-medium uppercase tracking-wide text-terra-600">{titulo}</p>
-      <p className="mt-1 text-[28px] font-extrabold tabular-nums leading-none tracking-tight text-terra-900">
+      <p className="mt-1 min-w-0 truncate text-xl font-extrabold tabular-nums leading-none tracking-tight text-terra-900 sm:text-2xl">
         {valor}
       </p>
 

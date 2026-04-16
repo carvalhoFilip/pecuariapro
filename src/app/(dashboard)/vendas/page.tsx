@@ -1,4 +1,4 @@
-import { Beef } from "lucide-react";
+import { Beef, Plus } from "lucide-react";
 import { VendasPageHeader } from "@/components/vendas/VendasPageHeader";
 import { cn } from "@/lib/utils";
 import { NovaVendaModalButton } from "@/contexts/dashboard-quick-actions";
@@ -86,7 +86,8 @@ export default async function VendasPage({
           </div>
           <p className="rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">{aviso}</p>
           <NovaVendaModalButton className="mt-4 h-10 rounded-lg bg-verde-700 px-4 font-semibold text-white hover:bg-verde-800">
-            + Adicionar Venda
+            <Plus className="h-4 w-4" aria-hidden />
+            Adicionar Venda
           </NovaVendaModalButton>
         </>
       ) : (
@@ -110,7 +111,8 @@ export default async function VendasPage({
                   variant="outline"
                   className="h-10 rounded-lg border-2 border-verde-600 px-4 text-sm font-semibold text-verde-800 hover:bg-verde-50"
                 >
-                  + Registrar primeira venda
+                  <Plus className="h-4 w-4" aria-hidden />
+                  Registrar primeira venda
                 </NovaVendaModalButton>
               </div>
             </div>

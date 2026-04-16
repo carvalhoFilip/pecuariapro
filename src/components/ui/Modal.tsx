@@ -61,14 +61,14 @@ export function Modal({
       role="presentation"
       onClick={onClose}
     >
-      <div className="flex min-h-[100dvh] w-full items-center justify-center px-4 py-8 sm:px-6">
+      <div className="flex min-h-[100dvh] w-full items-start justify-center overflow-y-auto px-4 py-4 sm:items-center sm:px-6 sm:py-8">
         <div
           role="dialog"
           aria-modal="true"
           aria-labelledby={titleId}
           onClick={(e) => e.stopPropagation()}
           className={cn(
-            "animate-modal-in flex w-full max-h-[min(90dvh,90vh)] flex-col overflow-hidden rounded-2xl border border-terra-200 bg-white shadow-2xl",
+            "animate-modal-in mx-auto flex w-full max-h-[min(90dvh,90vh)] flex-col overflow-hidden rounded-2xl border border-terra-200 bg-white shadow-2xl",
             maxWidthClass,
             className,
           )}

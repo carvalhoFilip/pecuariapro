@@ -95,7 +95,7 @@ export default async function DashboardPage({
 
         {podeCarregar ? (
           <>
-            <div className="grid grid-cols-2 gap-4 md:gap-6 xl:grid-cols-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4 xl:grid-cols-4 [&>*]:min-w-0">
               <MetricCard
                 titulo="Faturamento do mês"
                 valor={formatBRL(faturamentoMes)}

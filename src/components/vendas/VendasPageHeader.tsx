@@ -33,7 +33,7 @@ export function VendasPageHeader({ subtitulo, subtituloClassName, mesPickerValue
         ) : null}
         <NovaVendaModalButton className="h-10 shrink-0 rounded-lg bg-verde-700 px-4 font-semibold text-white hover:bg-verde-800">
           <Plus className="h-4 w-4" aria-hidden />
-          + Adicionar Venda
+          Adicionar Venda
         </NovaVendaModalButton>
       </div>
     </div>

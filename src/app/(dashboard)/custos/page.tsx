@@ -1,5 +1,5 @@
 import type { LucideIcon } from "lucide-react";
-import { Package, Pill, Receipt, Syringe, Users, Wheat } from "lucide-react";
+import { Package, Pill, Plus, Receipt, Syringe, Users, Wheat } from "lucide-react";
 import { NovoCustoModalButton } from "@/contexts/dashboard-quick-actions";
 import { CATEGORIAS_CUSTO } from "@/types";
 import { formatBRL, formatDataCurta } from "@/lib/format";
@@ -75,7 +75,8 @@ export default async function CustosPage() {
         ) : (
           <div className="flex w-full justify-end sm:ml-auto sm:w-auto sm:shrink-0">
             <NovoCustoModalButton className="h-10 shrink-0 rounded-lg bg-verde-700 px-4 font-semibold text-white hover:bg-verde-800">
-              + Adicionar custo
+              <Plus className="h-4 w-4" aria-hidden />
+              Adicionar custo
             </NovoCustoModalButton>
           </div>
         )}
@@ -142,7 +143,8 @@ export default async function CustosPage() {
               variant="outline"
               className="h-10 rounded-lg border-2 border-verde-600 px-4 text-sm font-semibold text-verde-800 hover:bg-verde-50"
             >
-              + Registrar primeiro custo
+              <Plus className="h-4 w-4" aria-hidden />
+              Registrar primeiro custo
             </NovoCustoModalButton>
           </div>
         </div>

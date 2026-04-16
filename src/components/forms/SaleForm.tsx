@@ -139,7 +139,7 @@ export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) 
           ))}
         </div>
 
-        <div className="grid grid-cols-2 gap-3 max-[440px]:grid-cols-1">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
             <Label htmlFor="data" className={modalLabel}>
               Data da venda
@@ -285,7 +285,7 @@ export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) 
           <p className="text-sm font-semibold text-verde-900">Resumo da venda</p>
           <hr className="my-3 border-verde-200/80" />
           {previewValido ? (
-            <div className="grid grid-cols-3 gap-0 divide-x divide-[#bbf7d0] text-center">
+            <div className="grid grid-cols-1 gap-4 divide-y divide-[#bbf7d0] text-center sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-y-0">
               <div className="px-2">
                 <p className="text-[11px] font-medium uppercase tracking-wide text-[#16a34a]">Arrobas</p>
                 <p className="mt-1.5 text-lg font-bold tabular-nums text-[#14532d]">{formatArrobas(arrobas)} @</p>

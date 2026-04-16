@@ -46,7 +46,7 @@ export function RecentSales({ vendas }: Props) {
             </NovaVendaModalButton>
           </div>
         ) : (
-          <div className="-mx-2 overflow-x-auto sm:mx-0">
+          <div className="-mx-2 min-w-0 overflow-x-auto sm:mx-0">
             <table className="w-full min-w-[520px] text-left text-sm">
               <thead>
                 <tr className="border-b border-[#f5f5f4]">

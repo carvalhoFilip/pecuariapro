@@ -185,56 +185,58 @@ export function RevenueChart({ dados }: Props) {
           </p>
         </div>
       ) : (
-        <div className="mt-6 h-[260px] w-full min-w-[280px] max-w-full">
-          <ResponsiveContainer width="100%" height={260} minWidth={280}>
-            <BarChart
-              data={dadosGrafico}
-              margin={{ top: 8, right: 8, left: 4, bottom: 8 }}
-              barGap={4}
-              barCategoryGap="18%"
-            >
-              <CartesianGrid vertical={false} stroke="#f5f5f4" strokeDasharray="4 4" />
-              <XAxis
-                dataKey="label"
-                tick={{ fontSize: 11, fill: "#78716c" }}
-                axisLine={false}
-                tickLine={false}
-              />
-              <YAxis
-                tickFormatter={(v) => (v === 0 ? "R$0" : `R$${(v / 1000).toFixed(0)}k`)}
-                tick={{ fontSize: 11, fill: "#78716c" }}
-                axisLine={false}
-                tickLine={false}
-                width={48}
-              />
-              <Tooltip content={<TooltipPt />} cursor={{ fill: "rgba(245,245,244,0.6)" }} />
-              <Legend content={(props) => <LegendaPills payload={props.payload} />} />
-              <Bar
-                dataKey="receita"
-                name="Receita"
-                fill="#16a34a"
-                radius={[4, 4, 0, 0]}
-                barSize={14}
-                isAnimationActive={false}
-              />
-              <Bar
-                dataKey="custos"
-                name="Custos"
-                fill="#dc2626"
-                radius={[4, 4, 0, 0]}
-                barSize={14}
-                isAnimationActive={false}
-              />
-              <Bar
-                dataKey="lucro"
-                name="Lucro"
-                fill="#2563eb"
-                radius={[4, 4, 0, 0]}
-                barSize={14}
-                isAnimationActive={false}
-              />
-            </BarChart>
-          </ResponsiveContainer>
+        <div className="mt-6 w-full min-w-0 overflow-hidden">
+          <div className="h-[260px] w-full min-w-0">
+            <ResponsiveContainer width="100%" height={260}>
+              <BarChart
+                data={dadosGrafico}
+                margin={{ top: 8, right: 8, left: 4, bottom: 8 }}
+                barGap={4}
+                barCategoryGap="18%"
+              >
+                <CartesianGrid vertical={false} stroke="#f5f5f4" strokeDasharray="4 4" />
+                <XAxis
+                  dataKey="label"
+                  tick={{ fontSize: 11, fill: "#78716c" }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <YAxis
+                  tickFormatter={(v) => (v === 0 ? "R$0" : `R$${(v / 1000).toFixed(0)}k`)}
+                  tick={{ fontSize: 11, fill: "#78716c" }}
+                  axisLine={false}
+                  tickLine={false}
+                  width={48}
+                />
+                <Tooltip content={<TooltipPt />} cursor={{ fill: "rgba(245,245,244,0.6)" }} />
+                <Legend content={(props) => <LegendaPills payload={props.payload} />} />
+                <Bar
+                  dataKey="receita"
+                  name="Receita"
+                  fill="#16a34a"
+                  radius={[4, 4, 0, 0]}
+                  barSize={14}
+                  isAnimationActive={false}
+                />
+                <Bar
+                  dataKey="custos"
+                  name="Custos"
+                  fill="#dc2626"
+                  radius={[4, 4, 0, 0]}
+                  barSize={14}
+                  isAnimationActive={false}
+                />
+                <Bar
+                  dataKey="lucro"
+                  name="Lucro"
+                  fill="#2563eb"
+                  radius={[4, 4, 0, 0]}
+                  barSize={14}
+                  isAnimationActive={false}
+                />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       )}
     </div>

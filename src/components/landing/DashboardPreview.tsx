@@ -121,7 +121,7 @@ export function Slide1Dashboard() {
 
         <div className="overflow-hidden rounded-xl border border-terra-200 bg-white px-2 pb-2 pt-2 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
           <p className="mb-1 px-1 text-[10px] font-bold text-terra-800">Receita × Custos</p>
-          <div className="h-[140px] min-h-[140px] w-full min-w-0">
+          <div className="h-[140px] w-full min-w-0 overflow-hidden">
             <ResponsiveContainer width="100%" height={140}>
               <BarChart
                 data={[...DADOS_FAKE.grafico]}

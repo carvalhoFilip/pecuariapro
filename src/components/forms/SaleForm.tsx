@@ -32,11 +32,8 @@ const fieldClass =
 const modalInput =
   "h-11 w-full min-w-0 max-w-full rounded-[10px] border-[1.5px] border-terra-200 bg-white px-3 pr-10 text-[15px] text-terra-900 shadow-sm transition-all placeholder:text-terra-400 focus:border-verde-600 focus:outline-none focus:ring-[3px] focus:ring-[rgba(22,163,74,0.1)]";
 
-/** `type="date"` nativo: evita `Input` com `flex`/`min-h-12` que estoura largura no mobile WebKit. */
-const modalDateInput = cn(
-  modalInput,
-  "box-border max-h-11 min-h-11 py-0 leading-none [color-scheme:light]",
-);
+/** Mesmas classes de `modalInput` (como demais campos) + neutralizar estilo nativo de data no iOS/Android. */
+const modalDateInput = cn(modalInput, "appearance-none [-webkit-appearance:none]");
 
 const modalLabel = "mb-1.5 block text-xs font-medium text-terra-700";
 
@@ -370,7 +367,7 @@ export function SaleForm({ titleless, onSaved, onDismiss }: SaleFormProps = {}) 
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
-              className={fieldClass}
+              className={cn(fieldClass, "appearance-none [-webkit-appearance:none]")}
             />
           </div>
           <div className="space-y-2">

@@ -38,8 +38,8 @@ export default function LandingPage() {
                 </Link>
               </div>
             </div>
-            <div className="mt-6 lg:mt-0">
-              <div className="rounded-2xl border border-white/10 bg-terra-800/40 p-3 shadow-2xl backdrop-blur-sm sm:p-4">
+            <div className="mt-6 min-w-0 lg:mt-0">
+              <div className="min-w-0 overflow-hidden rounded-2xl border border-white/10 bg-terra-800/40 p-3 shadow-2xl backdrop-blur-sm sm:p-4">
                 <PreviewCarousel />
               </div>
             </div>

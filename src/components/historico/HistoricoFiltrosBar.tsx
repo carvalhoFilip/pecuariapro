@@ -13,7 +13,7 @@ type Props = {
 };
 
 const inputClass =
-  "box-border h-11 w-full min-w-0 max-w-full rounded-xl border-[1.5px] border-terra-200 bg-white px-3 py-0 text-sm leading-normal text-terra-900 transition-interactive [color-scheme:light] focus:border-verde-600 focus:outline-none focus:ring-[3px] focus:ring-[rgba(22,163,74,0.1)]";
+  "h-11 w-full min-w-0 rounded-xl border-[1.5px] border-gray-200 bg-white px-3 text-sm text-terra-900 appearance-none [-webkit-appearance:none] [color-scheme:light] focus:border-verde-600 focus:outline-none focus:ring-[3px] focus:ring-[rgba(22,163,74,0.1)]";
 
 export function HistoricoFiltrosBar({
   mesReferencia,
@@ -33,8 +33,8 @@ export function HistoricoFiltrosBar({
   const monthPickerDisabled = modoIntervaloUrl || intervaloDigitado;
 
   return (
-    <div className="mb-6 border-b border-terra-200 pb-6">
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
+    <div className="mb-6 w-full min-w-0 overflow-x-hidden border-b border-terra-200 pb-6">
+      <div className="flex w-full min-w-0 flex-col gap-3 overflow-x-hidden sm:flex-row sm:items-end sm:gap-4">
         <div className="shrink-0">
           <MonthPicker value={mesReferencia} rota="/historico" disabled={monthPickerDisabled} />
         </div>
@@ -42,36 +42,40 @@ export function HistoricoFiltrosBar({
         <form
           method="get"
           action="/historico"
-          className="flex min-w-0 flex-1 flex-col gap-3 sm:flex-row sm:items-end sm:gap-4"
+          className="flex w-full min-w-0 flex-1 flex-col gap-3 overflow-x-hidden sm:flex-row sm:items-end sm:gap-4"
         >
-          <div className="grid min-w-0 flex-1 grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="grid w-full min-w-0 grid-cols-2 gap-3 overflow-x-hidden">
             <div className="min-w-0 max-w-full">
               <label htmlFor="historico-inicio" className="mb-1 block text-xs font-medium text-terra-600">
                 Início
               </label>
-              <input
-                id="historico-inicio"
-                name="inicio"
-                type="date"
-                placeholder="dd/mm/aaaa"
-                value={inicio}
-                onChange={(e) => setInicio(e.target.value)}
-                className={inputClass}
-              />
+              <div className="w-full overflow-hidden">
+                <input
+                  id="historico-inicio"
+                  name="inicio"
+                  type="date"
+                  placeholder="dd/mm/aaaa"
+                  value={inicio}
+                  onChange={(e) => setInicio(e.target.value)}
+                  className={inputClass}
+                />
+              </div>
             </div>
             <div className="min-w-0 max-w-full">
               <label htmlFor="historico-fim" className="mb-1 block text-xs font-medium text-terra-600">
                 Fim
               </label>
-              <input
-                id="historico-fim"
-                name="fim"
-                type="date"
-                placeholder="dd/mm/aaaa"
-                value={fim}
-                onChange={(e) => setFim(e.target.value)}
-                className={inputClass}
-              />
+              <div className="w-full overflow-hidden">
+                <input
+                  id="historico-fim"
+                  name="fim"
+                  type="date"
+                  placeholder="dd/mm/aaaa"
+                  value={fim}
+                  onChange={(e) => setFim(e.target.value)}
+                  className={inputClass}
+                />
+              </div>
             </div>
           </div>
           <div className="flex flex-wrap gap-2 sm:shrink-0">

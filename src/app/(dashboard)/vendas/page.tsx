@@ -118,7 +118,7 @@ export default async function VendasPage({
             </div>
           ) : (
             <div className="overflow-hidden rounded-2xl border-[1.5px] border-terra-200 bg-white shadow-sm">
-              <div className="overflow-x-auto">
+              <div className="min-w-0 overflow-x-auto">
                 <table className="w-full min-w-[720px] text-left text-sm">
                   <thead>
                     <tr className="border-b-[1.5px] border-terra-200 bg-terra-50">

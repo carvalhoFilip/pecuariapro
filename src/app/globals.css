@@ -43,41 +43,42 @@
 }
 
 @layer base {
-  * {
-    max-width: 100%;
-    box-sizing: border-box;
-  }
-
-  img,
-  video,
-  iframe,
-  canvas {
-    max-width: 100%;
-    height: auto;
-  }
-
-  html,
-  body {
-    min-height: 100svh;
+  html {
+    overflow-x: hidden;
     width: 100%;
-    max-width: 100%;
-    overflow-x: clip;
     overscroll-behavior-x: none;
-    overscroll-behavior-y: auto;
-  }
-
-  input[type="date"] {
-    color-scheme: light;
-    max-width: 100%;
   }
 
   body {
+    overflow-x: hidden;
+    width: 100%;
+    min-height: 100dvh;
+    overscroll-behavior-x: none;
+    -webkit-text-size-adjust: 100%;
     color: var(--foreground);
     background: var(--background);
     font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
     -webkit-tap-highlight-color: transparent;
     text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
+  }
+
+  * {
+    box-sizing: border-box;
+    max-width: 100%;
+  }
+
+  img,
+  video,
+  iframe,
+  canvas,
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+
+  input[type="date"] {
+    color-scheme: light;
+    max-width: 100%;
   }
 
   a,

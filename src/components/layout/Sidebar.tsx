@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Beef, CreditCard, History, LayoutDashboard, Menu, TrendingUp, Wallet, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { SidebarSignOut } from "./SidebarSignOut";
@@ -33,10 +33,56 @@ export type SidebarProps = {
 export function Sidebar({ userEmail }: SidebarProps) {
   const pathname = usePathname();
   const [aberto, setAberto] = useState(false);
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+  const edgeSwipeCandidate = useRef(false);
 
   useEffect(() => {
     setAberto(false);
   }, [pathname]);
+
+  useEffect(() => {
+    const handleTouchStart = (e: TouchEvent) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      touchStartX.current = touch.clientX;
+      touchStartY.current = touch.clientY;
+      edgeSwipeCandidate.current = touch.clientX < 30;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!edgeSwipeCandidate.current) return;
+      const touch = e.touches[0];
+      if (!touch) return;
+      const deltaX = touch.clientX - touchStartX.current;
+      const deltaY = Math.abs(touch.clientY - touchStartY.current);
+      if (deltaX > 20 && deltaY < 50) {
+        e.preventDefault();
+      }
+    };
+
+    const handleTouchEnd = (e: TouchEvent) => {
+      const touch = e.changedTouches[0];
+      if (!touch) return;
+      const deltaX = touch.clientX - touchStartX.current;
+      const deltaY = Math.abs(touch.clientY - touchStartY.current);
+      if (edgeSwipeCandidate.current && deltaX > 50 && deltaY < 50) {
+        e.preventDefault();
+        setAberto(true);
+      }
+      edgeSwipeCandidate.current = false;
+    };
+
+    document.addEventListener("touchstart", handleTouchStart, { passive: true });
+    document.addEventListener("touchmove", handleTouchMove, { passive: false });
+    document.addEventListener("touchend", handleTouchEnd, { passive: false });
+
+    return () => {
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+    };
+  }, []);
 
   function linkAtivo(href: string) {
     if (href === "/dashboard") return pathname === "/dashboard";

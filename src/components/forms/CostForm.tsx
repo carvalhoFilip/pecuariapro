@@ -139,7 +139,7 @@ export function CostForm({ titleless, onSaved, onDismiss }: CostFormProps = {}) 
               value={date}
               onChange={(e) => setDate(e.target.value)}
               required
-              className={modalField}
+              className={cn(modalField, "appearance-none [-webkit-appearance:none]")}
             />
           </div>
         </div>
@@ -296,7 +296,7 @@ export function CostForm({ titleless, onSaved, onDismiss }: CostFormProps = {}) 
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 required
-                className={fieldClass}
+                className={cn(fieldClass, "appearance-none [-webkit-appearance:none]")}
               />
             </div>
           </div>

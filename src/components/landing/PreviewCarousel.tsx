@@ -308,16 +308,16 @@ export function PreviewCarousel() {
   const next = () => setCurrent((i) => Math.min(slides.length - 1, i + 1));
 
   return (
-    <div className="relative select-none">
+    <div className="relative w-full min-w-0 max-w-full select-none overflow-hidden">
       <div
+        className="w-full max-w-full"
         style={{
           borderRadius: 16,
           border: "1px solid #e7e5e4",
           boxShadow: "0 20px 60px rgba(0,0,0,0.15)",
           overflow: "hidden",
           background: "#fafaf9",
-          width: "100%",
-          maxWidth: 560,
+          maxWidth: "min(560px, 100%)",
         }}
       >
         <div

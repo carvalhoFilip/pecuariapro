@@ -31,9 +31,12 @@ export const metadata: Metadata = {
   },
 };
 
+/** Equivale a: width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no */
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
   viewportFit: "cover",
   themeColor: "#16a34a",
 };
@@ -44,10 +47,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning className="overflow-x-clip">
-      <body
-        className={`${inter.variable} min-h-svh touch-pan-y overflow-x-clip bg-terra-50 font-sans text-terra-950 antialiased`}
-      >
+    <html lang="pt-BR" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans text-terra-950 antialiased`}>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

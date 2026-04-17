@@ -37,34 +37,9 @@ export default async function DashboardLayout({
   return (
     <DashboardQuickActionsProvider>
       <PreventSwipeBack />
-      {/*
-        Layout padrão PWA:
-        - Desktop: sidebar fixa à esquerda + conteúdo à direita
-        - Mobile: sidebar como drawer + conteúdo ocupa tela toda
-      */}
-      <div
-        style={{
-          display: "flex",
-          minHeight: "100dvh",
-          width: "100%",
-          overflow: "hidden",
-          position: "relative",
-        }}
-      >
+      <div className="flex min-h-screen bg-terra-50">
         <Sidebar userEmail={userEmail} />
-        <div
-          style={{
-            flex: 1,
-            overflowY: "auto",
-            overflowX: "hidden",
-            WebkitOverflowScrolling: "touch",
-            minWidth: 0,
-            paddingLeft: 0,
-          }}
-          className="md:pl-[240px]"
-        >
-          {children}
-        </div>
+        <div className="flex-1 md:pl-[240px] min-h-screen">{children}</div>
       </div>
     </DashboardQuickActionsProvider>
   );

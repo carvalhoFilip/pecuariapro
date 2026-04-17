@@ -18,7 +18,7 @@ export default function LandingPage() {
         </Button>
       </header>
 
-      <main>
+      <div>
         <section className="flex min-h-svh items-center bg-[#1c1917] px-4 py-8 sm:py-10 md:min-h-0 md:py-24">
           <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-8 sm:gap-10 lg:grid-cols-2">
             <div className="mx-auto w-full max-w-[420px] text-center sm:max-w-xl lg:mx-0 lg:max-w-xl lg:text-left">
@@ -123,7 +123,7 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-      </main>
+      </div>
 
       <footer className="border-t border-terra-200 py-8 text-center text-sm text-terra-600">
         Pecuária Pro © 2026 · Para quem cria gado de verdade.

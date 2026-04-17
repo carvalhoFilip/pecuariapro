@@ -47,7 +47,7 @@ export function Sidebar({ userEmail }: { userEmail: string | null }) {
   }
 
   return (
-    <>
+    <div className="w-0 shrink-0 overflow-visible">
       {/* Botão hamburguer — só mobile */}
       <button
         type="button"
@@ -67,9 +67,9 @@ export function Sidebar({ userEmail }: { userEmail: string | null }) {
         />
       ) : null}
 
-      {/* Sidebar — drawer no mobile, sempre visível no desktop */}
+      {/* Sidebar — drawer no mobile, sempre visível no desktop; scroll só aqui quando necessário */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex h-full w-[240px] flex-col bg-terra-950 shadow-[4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-[240px] flex-col overflow-y-auto overflow-x-hidden bg-terra-950 shadow-[4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out md:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
@@ -91,7 +91,7 @@ export function Sidebar({ userEmail }: { userEmail: string | null }) {
           </button>
         </div>
 
-        <nav className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto overflow-x-hidden px-3 py-2">
+        <nav className="flex flex-1 flex-col gap-0.5 px-3 py-2">
           {NAV.map(({ href, label, icon: Icon }) => {
             const active = linkActive(pathname, href);
             return (
@@ -126,6 +126,6 @@ export function Sidebar({ userEmail }: { userEmail: string | null }) {
           </button>
         </div>
       </aside>
-    </>
+    </div>
   );
 }

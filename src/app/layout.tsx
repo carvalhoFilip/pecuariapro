@@ -49,7 +49,9 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans text-terra-950 antialiased`}>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <main className="min-h-dvh w-full">{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );

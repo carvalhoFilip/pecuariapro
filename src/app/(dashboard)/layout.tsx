@@ -6,6 +6,8 @@ import { userHasValidSubscriptionAccess, paywallRedirectQuery } from "@/lib/subs
 import { ensureAppUser } from "@/lib/user";
 import { isUuidLike } from "@/lib/user-id";
 import { DashboardQuickActionsProvider } from "@/contexts/dashboard-quick-actions";
+import { SidebarProvider } from "@/contexts/sidebar-context";
+import { MobileHeader } from "@/components/layout/MobileHeader";
 import { PreventSwipeBack } from "@/components/layout/PreventSwipeBack";
 
 export const dynamic = "force-dynamic";
@@ -36,11 +38,16 @@ export default async function DashboardLayout({
 
   return (
     <DashboardQuickActionsProvider>
-      <PreventSwipeBack />
-      <div className="flex min-h-screen bg-terra-50">
-        <Sidebar userEmail={userEmail} />
-        <div className="flex-1 md:pl-[240px] min-h-screen">{children}</div>
-      </div>
+      <SidebarProvider>
+        <PreventSwipeBack />
+        <div className="flex min-h-screen bg-terra-50">
+          <Sidebar userEmail={userEmail} />
+          <div className="flex min-h-screen min-w-0 flex-1 flex-col md:pl-[240px]">
+            <MobileHeader />
+            {children}
+          </div>
+        </div>
+      </SidebarProvider>
     </DashboardQuickActionsProvider>
   );
 }

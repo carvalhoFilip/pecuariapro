@@ -64,7 +64,7 @@ export default async function AssinaturaPage() {
   const mostrarTrial = (subscriptionStatus ?? "").toLowerCase() === "trialing" && trialLabel;
 
   return (
-    <div className="mx-auto min-h-0 w-full max-w-[1280px] flex-1 bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
+    <div className="mx-auto min-h-0 w-full max-w-[1280px] flex-1 bg-[#fafaf9] px-4 pt-4 pb-8 md:px-8 md:pt-8">
       <h1 className="text-2xl font-bold tracking-tight text-terra-900">Minha assinatura</h1>
 
       {aviso ? (

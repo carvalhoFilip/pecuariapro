@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -10,10 +9,10 @@ import {
   History,
   CreditCard,
   LogOut,
-  Menu,
   X,
 } from "lucide-react";
 import { getAuthClient } from "@/lib/auth-client";
+import { useSidebar } from "@/contexts/sidebar-context";
 
 const NAV = [
   { href: "/dashboard", label: "Painel", icon: LayoutDashboard },
@@ -30,12 +29,8 @@ function linkActive(pathname: string, href: string) {
 }
 
 export function Sidebar({ userEmail }: { userEmail: string | null }) {
-  const [open, setOpen] = useState(false);
+  const { open, setOpen } = useSidebar();
   const pathname = usePathname();
-
-  useEffect(() => {
-    setOpen(false);
-  }, [pathname]);
 
   async function handleSignOut() {
     try {
@@ -48,16 +43,6 @@ export function Sidebar({ userEmail }: { userEmail: string | null }) {
 
   return (
     <div className="w-0 shrink-0 overflow-visible">
-      {/* Botão hamburguer — só mobile */}
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="fixed top-4 left-4 z-40 flex h-10 w-10 items-center justify-center rounded-xl bg-[#1c1917] text-white md:hidden"
-        aria-label="Abrir menu"
-      >
-        <Menu size={20} />
-      </button>
-
       {/* Overlay — só mobile quando aberta */}
       {open ? (
         <div

@@ -62,7 +62,7 @@ export default async function CustosPage() {
   }
 
   return (
-    <div className="mx-auto min-h-0 w-full max-w-[1280px] flex-1 bg-[#fafaf9] px-4 py-6 md:px-8 md:py-8">
+    <div className="mx-auto min-h-0 w-full max-w-[1280px] flex-1 bg-[#fafaf9] px-4 pt-4 pb-8 md:px-8 md:pt-8">
       <div className="mb-6 flex items-start justify-between gap-4 border-b border-terra-200 pb-6">
         <div className="min-w-0 flex-1">
           <h1 className="text-2xl font-bold tracking-tight text-terra-900">Custos</h1>

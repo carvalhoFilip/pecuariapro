@@ -32,11 +32,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <DashboardQuickActionsProvider>
       <PreventSwipeBack />
-      <div className="min-h-screen w-full bg-terra-50">
+      <div className="flex h-screen w-full overflow-hidden bg-terra-50">
         <Sidebar userEmail={userEmail} />
-        <div className="dashboard-content md:pl-[240px] min-h-screen w-full overflow-x-hidden overscroll-none">
+        <main className="dashboard-content min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-none md:pl-[240px]">
           {children}
-        </div>
+        </main>
       </div>
     </DashboardQuickActionsProvider>
   );

@@ -1,22 +1,27 @@
+import type { ReactNode } from "react";
 import { redirect } from "next/navigation";
 import { Sidebar } from "@/components/layout/Sidebar";
-import { PreventSwipeBack } from "@/components/layout/PreventSwipeBack";
-import { DashboardQuickActionsProvider } from "@/contexts/dashboard-quick-actions";
 import { getNeonAuthOrNull, getSessionUser } from "@/lib/auth";
-import { paywallRedirectQuery, userHasValidSubscriptionAccess } from "@/lib/subscription-access";
+import { userHasValidSubscriptionAccess, paywallRedirectQuery } from "@/lib/subscription-access";
 import { ensureAppUser } from "@/lib/user";
 import { isUuidLike } from "@/lib/user-id";
+import { DashboardQuickActionsProvider } from "@/contexts/dashboard-quick-actions";
+import { PreventSwipeBack } from "@/components/layout/PreventSwipeBack";
 
 export const dynamic = "force-dynamic";
 
-export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default async function DashboardLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const session = await getSessionUser();
   const userEmail = session.user?.email ?? null;
   const auth = getNeonAuthOrNull();
 
   if (auth) {
     if (session.error === "auth_not_configured") {
-      /* deixa passar: ainda sem Neon Auth */
+      // deixa passar
     } else if (!session.user || session.error === "unauthorized") {
       redirect("/login");
     } else if (!isUuidLike(session.user.id)) {
@@ -32,11 +37,34 @@ export default async function DashboardLayout({ children }: { children: React.Re
   return (
     <DashboardQuickActionsProvider>
       <PreventSwipeBack />
-      <div className="flex h-screen w-full overflow-hidden bg-terra-50">
+      {/*
+        Layout padrão PWA:
+        - Desktop: sidebar fixa à esquerda + conteúdo à direita
+        - Mobile: sidebar como drawer + conteúdo ocupa tela toda
+      */}
+      <div
+        style={{
+          display: "flex",
+          minHeight: "100dvh",
+          width: "100%",
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
         <Sidebar userEmail={userEmail} />
-        <main className="dashboard-content min-h-0 flex-1 overflow-y-auto overflow-x-hidden overscroll-none md:pl-[240px]">
+        <div
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            overflowX: "hidden",
+            WebkitOverflowScrolling: "touch",
+            minWidth: 0,
+            paddingLeft: 0,
+          }}
+          className="md:pl-[240px]"
+        >
           {children}
-        </main>
+        </div>
       </div>
     </DashboardQuickActionsProvider>
   );

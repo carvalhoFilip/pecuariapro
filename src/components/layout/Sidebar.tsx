@@ -1,171 +1,131 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
-import { Beef, CreditCard, History, LayoutDashboard, Menu, TrendingUp, Wallet, X } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { SidebarSignOut } from "./SidebarSignOut";
+import {
+  LayoutDashboard,
+  TrendingUp,
+  Wallet,
+  History,
+  CreditCard,
+  LogOut,
+  Menu,
+  X,
+} from "lucide-react";
+import { getAuthClient } from "@/lib/auth-client";
 
-const nav = [
-  { href: "/dashboard", label: "Painel", Icon: LayoutDashboard },
-  { href: "/vendas", label: "Vendas", Icon: TrendingUp },
-  { href: "/custos", label: "Custos", Icon: Wallet },
-  { href: "/historico", label: "Histórico", Icon: History },
-  { href: "/assinatura", label: "Assinatura", Icon: CreditCard },
-] as const;
+const NAV = [
+  { href: "/dashboard", label: "Painel", icon: LayoutDashboard },
+  { href: "/vendas", label: "Vendas", icon: TrendingUp },
+  { href: "/custos", label: "Custos", icon: Wallet },
+  { href: "/historico", label: "Histórico", icon: History },
+  { href: "/assinatura", label: "Assinatura", icon: CreditCard },
+];
 
-function iniciais(email: string | null | undefined) {
-  if (!email) return "?";
-  const p = email.split("@")[0]?.slice(0, 2) ?? "?";
-  return p.toUpperCase();
+function linkActive(pathname: string, href: string) {
+  if (href === "/dashboard") return pathname === "/dashboard";
+  if (href === "/historico") return pathname.startsWith("/historico");
+  return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function truncarEmail(email: string, max = 28) {
-  if (email.length <= max) return email;
-  return `${email.slice(0, max - 1)}…`;
-}
-
-export type SidebarProps = {
-  userEmail?: string | null;
-};
-
-export function Sidebar({ userEmail }: SidebarProps) {
+export function Sidebar({ userEmail }: { userEmail: string | null }) {
+  const [open, setOpen] = useState(false);
   const pathname = usePathname();
-  const [aberto, setAberto] = useState(false);
 
   useEffect(() => {
-    setAberto(false);
+    setOpen(false);
   }, [pathname]);
 
-  function linkAtivo(href: string) {
-    if (href === "/dashboard") return pathname === "/dashboard";
-    if (href === "/vendas") return pathname === "/vendas";
-    if (href === "/custos") return pathname === "/custos";
-    if (href === "/historico") return pathname.startsWith("/historico");
-    if (href === "/assinatura") return pathname === "/assinatura";
-    return pathname === href || pathname.startsWith(`${href}/`);
+  async function handleSignOut() {
+    try {
+      await getAuthClient().signOut();
+    } catch {
+      /* ignore */
+    }
+    window.location.href = "/login";
   }
-
-  const linkClass = (href: string) => {
-    const ativo = linkAtivo(href);
-    return cn(
-      "transition-interactive flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium",
-      ativo
-        ? "bg-verde-700 font-semibold text-white"
-        : "text-terra-100 hover:bg-terra-800 hover:text-white",
-    );
-  };
-
-  const NavLinks = ({ onNavigate }: { onNavigate?: () => void }) => (
-    <nav className="flex flex-col gap-0.5 px-3 py-2">
-      {nav.map(({ href, label, Icon }) => (
-        <Link key={href} href={href} className={linkClass(href)} onClick={onNavigate}>
-          <Icon className="h-5 w-5 shrink-0 opacity-90" aria-hidden />
-          {label}
-        </Link>
-      ))}
-    </nav>
-  );
-
-  const BlocoSidebar = ({ mobile = false }: { mobile?: boolean }) => (
-    <aside
-      className={cn(
-        "flex h-full w-full min-w-0 flex-col overflow-y-auto overflow-x-hidden bg-terra-950 shadow-sidebar",
-        mobile && "min-h-0",
-      )}
-    >
-      <div className="border-b border-terra-800 px-4 py-5">
-        <Link href="/dashboard" className="flex items-center gap-2.5" onClick={() => mobile && setAberto(false)}>
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-verde-800 text-white">
-            <Beef className="h-5 w-5" aria-hidden />
-          </span>
-          <div>
-            <p className="text-base font-bold tracking-tight text-white">Pecuária Pro</p>
-            <p className="text-xs text-terra-400">Gestão financeira</p>
-          </div>
-        </Link>
-      </div>
-
-      <NavLinks onNavigate={() => mobile && setAberto(false)} />
-
-      <div className="mt-auto border-t border-terra-800 p-4">
-        <div className="mb-3 flex items-center gap-3">
-          <span
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-terra-800 text-sm font-semibold text-verde-100"
-            aria-hidden
-          >
-            {iniciais(userEmail)}
-          </span>
-          <div className="min-w-0 flex-1">
-            <p className="truncate text-xs text-terra-400" title={userEmail ?? undefined}>
-              {userEmail ? truncarEmail(userEmail) : "—"}
-            </p>
-          </div>
-        </div>
-        <SidebarSignOut />
-        <Link
-          href="/"
-          className="transition-interactive mt-3 block text-center text-xs text-terra-400 hover:text-terra-200"
-        >
-          Página inicial
-        </Link>
-      </div>
-    </aside>
-  );
 
   return (
     <>
-      {/* Mobile top bar */}
-      <div className="sticky top-0 z-40 flex h-14 items-center justify-between border-b border-terra-200 bg-terra-50 px-4 md:hidden">
-        <button
-          type="button"
-          className="transition-interactive flex h-11 w-11 items-center justify-center rounded-lg border border-terra-200 bg-white text-terra-900 hover:bg-terra-100"
-          aria-label="Abrir menu"
-          onClick={() => setAberto(true)}
-        >
-          <Menu className="h-5 w-5" />
-        </button>
-        <Link href="/dashboard" className="flex items-center gap-2 font-bold text-terra-950">
-          <Beef className="h-5 w-5 text-verde-700" aria-hidden />
-          Pecuária Pro
-        </Link>
-        <span className="w-11" aria-hidden />
-      </div>
+      {/* Botão hamburguer — só mobile */}
+      <button
+        type="button"
+        onClick={() => setOpen(true)}
+        className="fixed top-4 left-4 z-40 flex h-10 w-10 items-center justify-center rounded-xl bg-[#1c1917] text-white md:hidden"
+        aria-label="Abrir menu"
+      >
+        <Menu size={20} />
+      </button>
 
-      {/* Overlay mobile */}
-      {aberto ? (
-        <button
-          type="button"
+      {/* Overlay — só mobile quando aberta */}
+      {open ? (
+        <div
           className="fixed inset-0 z-40 bg-black/50 md:hidden"
-          aria-label="Fechar menu"
-          onClick={() => setAberto(false)}
+          aria-hidden
+          onClick={() => setOpen(false)}
         />
       ) : null}
 
-      {/* Sidebar mobile fixa; apenas ela anima com translateX */}
+      {/* Sidebar — drawer no mobile, sempre visível no desktop */}
       <aside
-        className={cn(
-          "fixed inset-y-0 left-0 z-50 w-[240px] bg-terra-950 transition-transform duration-300 ease-in-out md:hidden",
-          aberto ? "translate-x-0" : "-translate-x-full",
-        )}
-        aria-hidden={!aberto}
+        className={`fixed inset-y-0 left-0 z-50 flex h-full w-[240px] flex-col bg-terra-950 shadow-[4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out md:translate-x-0 ${
+          open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        }`}
       >
-        <BlocoSidebar mobile />
-        <button
-          type="button"
-          className="absolute right-2 top-2 flex h-9 w-9 items-center justify-center rounded-full bg-white text-terra-900 shadow-md"
-          aria-label="Fechar"
-          onClick={() => setAberto(false)}
-        >
-          <X className="h-5 w-5" />
-        </button>
-      </aside>
+        <div className="flex items-center justify-between gap-2 border-b border-terra-800 px-4 py-4">
+          <Link
+            href="/dashboard"
+            className="min-w-0 text-base font-bold tracking-tight text-white"
+            onClick={() => setOpen(false)}
+          >
+            Pecuária Pro
+          </Link>
+          <button
+            type="button"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-terra-900 md:hidden"
+            aria-label="Fechar menu"
+            onClick={() => setOpen(false)}
+          >
+            <X size={18} />
+          </button>
+        </div>
 
-      {/* Desktop: fixa na viewport (evita `hidden md:flex`, que em alguns builds deixa display:none no ≥md) */}
-      <div className="max-md:hidden fixed left-0 top-0 z-[100] flex h-screen w-[240px] flex-col overflow-x-hidden">
-        <BlocoSidebar />
-      </div>
+        <nav className="flex min-h-0 flex-1 flex-col gap-0.5 overflow-y-auto overflow-x-hidden px-3 py-2">
+          {NAV.map(({ href, label, icon: Icon }) => {
+            const active = linkActive(pathname, href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={`flex items-center gap-3 rounded-lg px-4 py-2.5 text-sm font-medium transition-colors ${
+                  active
+                    ? "bg-verde-700 font-semibold text-white"
+                    : "text-terra-100 hover:bg-terra-800 hover:text-white"
+                }`}
+                onClick={() => setOpen(false)}
+              >
+                <Icon className="h-5 w-5 shrink-0 opacity-90" aria-hidden />
+                {label}
+              </Link>
+            );
+          })}
+        </nav>
+
+        <div className="mt-auto border-t border-terra-800 p-4">
+          <p className="mb-3 truncate text-xs text-terra-400" title={userEmail ?? undefined}>
+            {userEmail ?? "—"}
+          </p>
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="flex w-full items-center justify-center gap-2 rounded-lg border border-terra-700 bg-terra-900 px-3 py-2.5 text-sm font-medium text-terra-100 hover:bg-terra-800"
+          >
+            <LogOut className="h-4 w-4 shrink-0" aria-hidden />
+            Sair
+          </button>
+        </div>
+      </aside>
     </>
   );
 }

@@ -10,7 +10,7 @@ export function SidebarSignOut() {
     } catch {
       /* ignore */
     }
-    window.location.href = "/login";
+    window.location.href = "/";
   }
 
   return (

@@ -2,13 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { parseMesYYYYMM } from "@/lib/mes-calculo";
+import { mesCorrenteUtc, parseMesYYYYMM } from "@/lib/mes-calculo";
 import { cn } from "@/lib/utils";
-
-function mesAtualYYYYMMUtc(): string {
-  const d = new Date();
-  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
-}
 
 function addMesesIso(mes: string, delta: number): string | null {
   const p = parseMesYYYYMM(mes);
@@ -39,7 +34,7 @@ export type MonthPickerProps = {
 
 export function MonthPicker({ value, rota = "/dashboard", className, disabled }: MonthPickerProps) {
   const router = useRouter();
-  const atual = mesAtualYYYYMMUtc();
+  const atual = mesCorrenteUtc();
   const podeAnterior = Boolean(parseMesYYYYMM(value)) && !disabled;
   const proximo = addMesesIso(value, 1);
   const podeProximo = Boolean(proximo && proximo <= atual) && !disabled;

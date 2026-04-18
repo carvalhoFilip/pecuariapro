@@ -54,11 +54,11 @@ export function Sidebar({ userEmail }: { userEmail: string | null }) {
 
       {/* Sidebar — drawer no mobile, sempre visível no desktop; scroll só aqui quando necessário */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-[240px] flex-col overflow-y-auto overflow-x-hidden bg-terra-950 shadow-[4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out md:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex h-screen w-[240px] flex-col overflow-x-hidden bg-terra-950 shadow-[4px_0_24px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out md:translate-x-0 ${
           open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
         }`}
       >
-        <div className="flex items-center justify-between gap-2 border-b border-terra-800 px-4 py-4">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-terra-800 px-4 py-4">
           <Link
             href="/dashboard"
             className="min-w-0 text-base font-bold tracking-tight text-white"
@@ -97,7 +97,7 @@ export function Sidebar({ userEmail }: { userEmail: string | null }) {
           })}
         </nav>
 
-        <div className="mt-auto border-t border-terra-800 p-4">
+        <div className="shrink-0 border-t border-terra-800 bg-terra-950 p-4">
           <p className="mb-3 truncate text-xs text-terra-400" title={userEmail ?? undefined}>
             {userEmail ?? "—"}
           </p>

@@ -16,43 +16,42 @@ const beneficios = [
   "Relatórios mensais",
 ];
 
-const copyPorMotivo: Record<
-  string,
-  { titulo: string; subtitulo: string }
-> = {
-  inativo: {
-    titulo: "Comece o seu período gratuito",
-    subtitulo: "7 dias grátis para explorar o Pecuária Pro. Depois, R$ 39/mês. Cancele quando quiser.",
-  },
-  trial_expirado: {
-    titulo: "O seu período grátis terminou",
-    subtitulo: "Assine para continuar a registar vendas e custos, e a usar o dashboard com gráficos e histórico completo.",
-  },
-  cancelado: {
-    titulo: "Reative a sua assinatura",
-    subtitulo: "A sua conta está sem plano ativo. Recomece em minutos e recupere o histórico e os relatórios.",
-  },
-  pagamento: {
-    titulo: "Pagamento em atraso",
-    subtitulo:
-      "O último pagamento não foi concluído. Regularize na Stripe ou refaça o checkout com o mesmo email da conta.",
-  },
-};
-
 /** Mantém o UI de loading visível pelo menos este tempo (navegação landing/login → /pagamento). */
 const PAGAMENTO_MIN_LOAD_MS = 2_000;
+
+function copyPagamento(motivo: string | undefined) {
+  const titulo =
+    motivo === "trial_expirado"
+      ? "O seu período de teste terminou"
+      : motivo === "cancelado"
+        ? "Reative sua assinatura"
+        : motivo === "inativo"
+          ? "Assine para continuar"
+          : motivo === "pagamento"
+            ? "Pagamento em atraso"
+            : "Acesse o Pecuária Pro";
+
+  const subtitulo =
+    motivo === "trial_expirado"
+      ? "Assine agora para continuar usando o Pecuária Pro."
+      : motivo === "pagamento"
+        ? "O último pagamento não foi concluído. Regularize na Stripe ou refaça o checkout com o mesmo email da conta."
+        : motivo === "cancelado"
+          ? "A sua conta está sem plano ativo. Recomece em minutos e recupere o histórico e os relatórios."
+          : "Período de teste de 7 dias grátis, depois R$ 39/mês. Cancele quando quiser.";
+
+  return { titulo, subtitulo };
+}
 
 export default async function PagamentoPage({
   searchParams,
 }: {
-  searchParams: Promise<{ motivo?: string }>;
+  searchParams: Promise<{ motivo?: string; cancelado?: string }>;
 }) {
-  const { motivo } = await searchParams;
+  const { motivo, cancelado } = await searchParams;
   await new Promise((resolve) => setTimeout(resolve, PAGAMENTO_MIN_LOAD_MS));
-  const copy = copyPorMotivo[motivo ?? ""] ?? {
-    titulo: "Acesse o Pecuária Pro",
-    subtitulo: "7 dias grátis, depois R$ 39/mês. Cancele quando quiser.",
-  };
+  const motivoEfetivo = motivo ?? (cancelado === "1" ? "cancelado" : undefined);
+  const copy = copyPagamento(motivoEfetivo);
 
   return (
     <div className="flex min-h-dvh w-full items-center justify-center overflow-x-hidden overscroll-y-none bg-terra-50 px-4 py-6 sm:py-8">
@@ -78,7 +77,7 @@ export default async function PagamentoPage({
                 size="lg"
                 className="w-full rounded-xl bg-verde-700 py-4 text-base font-semibold text-white hover:bg-verde-800"
               >
-                Começar 7 dias grátis
+                Começar período de teste (7 dias)
               </Button>
             </form>
           ) : (

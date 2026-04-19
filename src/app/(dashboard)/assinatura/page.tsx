@@ -11,7 +11,7 @@ function badgeStatus(status: string | null | undefined) {
     return { label: "Ativo", className: "bg-verde-100 text-verde-800 ring-1 ring-verde-200" };
   }
   if (s === "trialing") {
-    return { label: "Trial", className: "bg-blue-100 text-blue-800 ring-1 ring-blue-200" };
+    return { label: "Período de teste", className: "bg-blue-100 text-blue-800 ring-1 ring-blue-200" };
   }
   if (s === "canceled" || s === "cancelled") {
     return { label: "Cancelado", className: "bg-red-100 text-red-800 ring-1 ring-red-200" };
@@ -87,7 +87,7 @@ export default async function AssinaturaPage() {
 
           {mostrarTrial ? (
             <p className="mt-3 text-sm text-terra-700">
-              <span className="font-medium text-terra-900">Trial encerra em:</span> {trialLabel}
+              <span className="font-medium text-terra-900">O período de teste termina em:</span> {trialLabel}
             </p>
           ) : null}
 

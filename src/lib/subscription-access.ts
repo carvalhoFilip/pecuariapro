@@ -13,7 +13,7 @@ function normalizeTrialEndsAt(value: Date | string | null | undefined): Date | n
 
 /**
  * Acesso ao dashboard e às APIs de dados (vendas, custos, métricas).
- * `trialing` exige `trialEndsAt` no futuro quando estiver definido no BD.
+ * Estado `trialing` (período de teste): com `trialEndsAt` definido no BD, o fim tem de ser no futuro.
  */
 export function userHasValidSubscriptionAccess(
   subscriptionStatus: string | null | undefined,

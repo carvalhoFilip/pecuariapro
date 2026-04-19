@@ -21,7 +21,7 @@ export default async function RegisterPage({
   const checkoutOk = checkout === "ok";
 
   if (!redirectTo) {
-    redirect("/register?redirect=/pagamento");
+    redirect("/register?redirect=/dashboard");
   }
 
   let checkoutEmail: string | null = null;

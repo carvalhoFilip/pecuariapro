@@ -34,7 +34,7 @@ export default function LandingPage() {
                   href="/register"
                   className="inline-flex h-12 min-h-12 w-full items-center justify-center rounded-xl border-0 bg-green-600 px-6 text-base font-bold text-white hover:bg-green-700 sm:w-auto"
                 >
-                  Começar 7 dias grátis →
+                  Começar período de teste (7 dias) →
                 </Link>
               </div>
             </div>
@@ -116,10 +116,12 @@ export default function LandingPage() {
                   href="/register"
                   className="inline-flex h-[52px] w-full items-center justify-center rounded-md bg-verde-700 px-4 text-base font-semibold text-white hover:bg-verde-800"
                 >
-                  Começar com 7 dias grátis
+                  Começar com período de teste (7 dias)
                 </Link>
               </div>
-              <p className="mt-6 text-center text-sm text-terra-500">7 dias grátis · Sem fidelidade · Cancele quando quiser</p>
+              <p className="mt-6 text-center text-sm text-terra-500">
+                Período de teste de 7 dias grátis · Sem fidelidade · Cancele quando quiser
+              </p>
             </div>
           </div>
         </section>

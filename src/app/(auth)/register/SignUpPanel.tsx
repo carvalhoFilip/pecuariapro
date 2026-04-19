@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { SignUpForm, authLocalization } from "@neondatabase/auth/react/ui";
+import { SignUpForm } from "@neondatabase/auth/react/ui";
+import { pecuariaAuthLocalization } from "@/lib/auth-ui-localization";
 import { Button } from "@/components/ui/button";
 
 export function SignUpPanel({
@@ -42,7 +43,7 @@ export function SignUpPanel({
         </div>
       ) : null}
       <h1 className="mb-6 text-2xl font-bold text-emerald-950">Criar conta</h1>
-      <SignUpForm localization={authLocalization} />
+      <SignUpForm localization={pecuariaAuthLocalization} />
       <p className="mt-6 text-center text-sm text-neutral-600">
         Já tem conta?{" "}
         <Link href="/login?redirect=/dashboard" className="font-medium text-emerald-800 underline">

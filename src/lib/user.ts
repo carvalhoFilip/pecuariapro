@@ -38,6 +38,8 @@ export async function ensureAppUser(input: { id: string; email: string }) {
     const normalizedEmail = input.email.trim().toLowerCase();
     // Upsert: layout e página do dashboard podem chamar isto em paralelo; dois INSERTs
     // geram duplicate key em `users_pkey` sem ON CONFLICT.
+    const trialEndsAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
     let row: typeof users.$inferSelect | undefined;
     try {
       [row] = await db
@@ -45,9 +47,12 @@ export async function ensureAppUser(input: { id: string; email: string }) {
         .values({
           id: input.id,
           email: normalizedEmail,
+          subscriptionStatus: "trialing",
+          trialEndsAt,
         })
         .onConflictDoUpdate({
           target: users.id,
+          // Apenas email: nunca subscriptionStatus/trialEndsAt para não resetar o período de teste a cada login.
           set: { email: normalizedEmail },
         })
         .returning();

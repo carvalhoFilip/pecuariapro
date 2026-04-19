@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { SignInForm, authLocalization } from "@neondatabase/auth/react/ui";
+import { SignInForm } from "@neondatabase/auth/react/ui";
+import { pecuariaAuthLocalization } from "@/lib/auth-ui-localization";
 import { Button } from "@/components/ui/button";
 import { PagamentoNavLink } from "@/components/navigation/PagamentoNavLink";
 
@@ -27,11 +28,11 @@ export function SignInPanel({ configured }: { configured: boolean }) {
   return (
     <div className="w-full max-w-md rounded-2xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-8">
       <h1 className="mb-6 text-2xl font-bold text-emerald-950">Entrar</h1>
-      <SignInForm localization={authLocalization} />
+      <SignInForm localization={pecuariaAuthLocalization} />
       <p className="mt-6 text-center text-sm text-neutral-600">
         Não tem conta?{" "}
         <PagamentoNavLink
-          href="/register?redirect=/pagamento"
+          href="/register?redirect=/dashboard"
           className="font-medium text-emerald-800 underline"
         >
           Criar conta

@@ -10,6 +10,7 @@ import { SidebarProvider } from "@/contexts/sidebar-context";
 import { MobileHeader } from "@/components/layout/MobileHeader";
 import { PreventSwipeBack } from "@/components/layout/PreventSwipeBack";
 import { TrialBanner } from "@/components/dashboard/TrialBanner";
+import { CompleteRegistrationTracker } from "@/components/analytics/CompleteRegistrationTracker";
 
 export const dynamic = "force-dynamic";
 
@@ -45,6 +46,7 @@ export default async function DashboardLayout({
   return (
     <DashboardQuickActionsProvider>
       <SidebarProvider>
+        <CompleteRegistrationTracker />
         <PreventSwipeBack />
         <div className="flex min-h-screen bg-terra-50">
           <Sidebar userEmail={userEmail} />

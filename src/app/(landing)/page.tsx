@@ -2,10 +2,12 @@ import Link from "next/link";
 import { Beef, CheckCircle, XCircle } from "lucide-react";
 import { PreviewCarousel } from "@/components/landing/PreviewCarousel";
 import { Button } from "@/components/ui/button";
+import { LandingPixelEvents } from "@/components/analytics/LandingPixelEvents";
 
 export default function LandingPage() {
   return (
     <div className="min-h-svh bg-terra-50 text-terra-950">
+      <LandingPixelEvents />
       <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-8">
         <Link href="/" className="flex items-center gap-2 font-bold text-terra-950">
           <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-verde-700 text-white">

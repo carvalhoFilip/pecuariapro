@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import { AuthProvider } from "@/components/auth/AuthProvider";
+import { MetaPixelBase } from "@/components/analytics/MetaPixelBase";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -49,6 +50,7 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${inter.variable} font-sans text-terra-950 antialiased`}>
+        <MetaPixelBase />
         <AuthProvider>
           <main className="min-h-dvh w-full">{children}</main>
         </AuthProvider>

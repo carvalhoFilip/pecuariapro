@@ -3,6 +3,7 @@ import { and, desc, eq, gte, lte } from "drizzle-orm";
 import { getDb } from "@/db";
 import { sales } from "@/db/schema";
 import { requireSessionWithUser } from "@/lib/require-session";
+import { rateLimit } from "@/lib/rate-limit";
 import { calcularArrobas, calcularValorTotal } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -91,7 +92,9 @@ export async function GET(request: Request) {
       },
     });
   } catch (e) {
-    console.error(e);
+    if (process.env.NODE_ENV === "development") {
+      console.error("sales.GET error:", e);
+    }
     return NextResponse.json(
       { mensagem: "Não foi possível carregar as vendas. Tente de novo em instantes." },
       { status: 500 },
@@ -106,6 +109,11 @@ export async function POST(request: Request) {
       return authRes.response;
     }
     const { user } = authRes.data;
+    const { success } = rateLimit(`sales:${user.id}`, 30, 60_000);
+    if (!success) {
+      return new Response("Muitas requisições", { status: 429 });
+    }
+
     const body = (await request.json()) as Record<string, unknown>;
     const dateRaw = body.date;
     const quantidadeAnimais = parseNum(body.quantidadeAnimais);
@@ -114,15 +122,34 @@ export async function POST(request: Request) {
     const precoArroba = parseNum(body.precoArroba);
     const observacao = typeof body.observacao === "string" ? body.observacao : null;
 
-    if (!dateRaw || quantidadeAnimais === null || pesoBruto === null || pesoLiquido === null || precoArroba === null) {
+    if (
+      !dateRaw ||
+      quantidadeAnimais === null ||
+      pesoBruto === null ||
+      pesoLiquido === null ||
+      precoArroba === null
+    ) {
       return NextResponse.json(
         { mensagem: "Preencha data, quantidade de animais, pesos e preço da arroba." },
         { status: 400 },
       );
     }
 
-    if (quantidadeAnimais <= 0 || pesoBruto <= 0 || pesoLiquido <= 0 || precoArroba <= 0) {
-      return NextResponse.json({ mensagem: "Use apenas valores maiores que zero." }, { status: 400 });
+    if (!Number.isFinite(quantidadeAnimais) || quantidadeAnimais <= 0) {
+      return NextResponse.json({ mensagem: "Quantidade inválida." }, { status: 400 });
+    }
+    if (!Number.isFinite(pesoBruto) || pesoBruto <= 0) {
+      return NextResponse.json({ mensagem: "Peso bruto inválido." }, { status: 400 });
+    }
+    if (!Number.isFinite(pesoLiquido) || pesoLiquido <= 0) {
+      return NextResponse.json({ mensagem: "Peso líquido inválido." }, { status: 400 });
+    }
+    if (!Number.isFinite(precoArroba) || precoArroba <= 0) {
+      return NextResponse.json({ mensagem: "Preço inválido." }, { status: 400 });
+    }
+
+    if (!Number.isInteger(quantidadeAnimais)) {
+      return NextResponse.json({ mensagem: "Quantidade de animais deve ser inteira." }, { status: 400 });
     }
 
     if (pesoLiquido >= pesoBruto) {
@@ -138,6 +165,10 @@ export async function POST(request: Request) {
     const dataVenda = new Date(String(dateRaw));
     if (Number.isNaN(dataVenda.getTime())) {
       return NextResponse.json({ mensagem: "Data inválida." }, { status: 400 });
+    }
+
+    if (observacao && observacao.length > 500) {
+      return NextResponse.json({ mensagem: "Observação muito longa." }, { status: 400 });
     }
 
     const db = getDb();
@@ -159,7 +190,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ venda: created });
   } catch (e) {
-    console.error(e);
+    if (process.env.NODE_ENV === "development") {
+      console.error("sales.POST error:", e);
+    }
     return NextResponse.json(
       { mensagem: "Não foi possível salvar a venda. Confira os dados e tente de novo." },
       { status: 500 },

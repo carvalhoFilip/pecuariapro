@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
 import type Stripe from "stripe";
 import { getDb } from "@/db";
 import { subscriptions, users } from "@/db/schema";
@@ -114,12 +115,15 @@ async function resolveUserIdForCustomer(
 export async function POST(request: Request) {
   const secret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!secret) {
-    console.error("STRIPE_WEBHOOK_SECRET não configurada.");
+    if (process.env.NODE_ENV === "development") {
+      console.error("STRIPE_WEBHOOK_SECRET não configurada.");
+    }
     return NextResponse.json({ mensagem: "Webhook não configurado." }, { status: 503 });
   }
 
   const rawBody = await request.text();
-  const signature = request.headers.get("stripe-signature");
+  const headersList = await headers();
+  const signature = headersList.get("stripe-signature");
   if (!signature) {
     return NextResponse.json({ mensagem: "Assinatura ausente." }, { status: 400 });
   }
@@ -128,7 +132,9 @@ export async function POST(request: Request) {
   try {
     event = getStripe().webhooks.constructEvent(rawBody, signature, secret);
   } catch (err) {
-    console.error("Stripe webhook assinatura inválida:", err);
+    if (process.env.NODE_ENV === "development") {
+      console.error("Stripe webhook assinatura inválida:", err);
+    }
     return NextResponse.json({ mensagem: "Assinatura inválida." }, { status: 400 });
   }
 
@@ -160,7 +166,9 @@ export async function POST(request: Request) {
         if (!customerId) break;
         const userId = await resolveUserIdForCustomer(customerId, sub.metadata);
         if (!userId) {
-          console.warn("Stripe webhook: usuário não encontrado para customer", customerId);
+          if (process.env.NODE_ENV === "development") {
+            console.warn("Stripe webhook: usuário não encontrado para customer", customerId);
+          }
           break;
         }
         await syncSubscriptionRecord(userId, sub);
@@ -225,7 +233,9 @@ export async function POST(request: Request) {
         break;
     }
   } catch (e) {
-    console.error("Erro ao processar webhook Stripe:", e);
+    if (process.env.NODE_ENV === "development") {
+      console.error("Erro ao processar webhook Stripe:", e);
+    }
     return NextResponse.json({ mensagem: "Erro interno ao processar evento." }, { status: 500 });
   }
 

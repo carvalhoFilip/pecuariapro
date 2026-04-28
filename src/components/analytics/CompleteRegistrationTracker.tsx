@@ -9,10 +9,7 @@ export function CompleteRegistrationTracker() {
     const hasRegisterIntent = window.localStorage.getItem(REGISTER_INTENT_KEY) === "1";
     if (!hasRegisterIntent) return;
 
-    trackMetaEvent("CompleteRegistration", {
-      status: "completed",
-      content_name: "Cadastro Pecuaria Pro",
-    });
+    trackMetaEvent("CompleteRegistration");
     window.localStorage.removeItem(REGISTER_INTENT_KEY);
   }, []);
 

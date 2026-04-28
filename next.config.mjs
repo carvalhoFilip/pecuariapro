@@ -1,21 +1,48 @@
 /** @type {import('next').NextConfig} */
-const isTurboDev =
-  process.argv.includes("dev") && process.argv.some((a) => a === "--turbo" || a.startsWith("--turbo="));
-
 const nextConfig = {
-  /** Next 16: declarar turbopack evita conflito quando existe `webpack` custom. */
   turbopack: {},
-};
 
-/** Poll no Windows: só aplica em `next dev` sem `--turbo` (`npm run dev:webpack`). */
-if (!isTurboDev) {
-  nextConfig.webpack = (config) => {
-    config.watchOptions = {
-      poll: 1000,
-      aggregateTimeout: 300,
-    };
-    return config;
-  };
-}
+  async headers() {
+    return [
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Strict-Transport-Security",
+            value: "max-age=63072000; includeSubDomains; preload",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "strict-origin-when-cross-origin",
+          },
+          {
+            key: "Permissions-Policy",
+            value: "camera=(), microphone=(), geolocation=()",
+          },
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://js.stripe.com",
+              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+              "font-src 'self' https://fonts.gstatic.com",
+              "img-src 'self' data: https:",
+              "connect-src 'self' https://api.stripe.com https://*.neon.tech",
+              "frame-src https://js.stripe.com https://hooks.stripe.com",
+            ].join("; "),
+          },
+        ],
+      },
+    ];
+  },
+};
 
 export default nextConfig;

@@ -3,6 +3,7 @@ import { and, desc, eq, gte, lte } from "drizzle-orm";
 import { getDb } from "@/db";
 import { costs } from "@/db/schema";
 import { requireSessionWithUser } from "@/lib/require-session";
+import { rateLimit } from "@/lib/rate-limit";
 import { CATEGORIAS_CUSTO } from "@/types";
 
 export const dynamic = "force-dynamic";
@@ -87,7 +88,9 @@ export async function GET(request: Request) {
       totais: { valorTotal: totalValor, registros: rows.length },
     });
   } catch (e) {
-    console.error(e);
+    if (process.env.NODE_ENV === "development") {
+      console.error("costs.GET error:", e);
+    }
     return NextResponse.json(
       { mensagem: "Não foi possível carregar os custos. Tente de novo em instantes." },
       { status: 500 },
@@ -102,6 +105,11 @@ export async function POST(request: Request) {
       return authRes.response;
     }
     const { user } = authRes.data;
+    const { success } = rateLimit(`costs:${user.id}`, 30, 60_000);
+    if (!success) {
+      return new Response("Muitas requisições", { status: 429 });
+    }
+
     const body = (await request.json()) as Record<string, unknown>;
     const tipo = typeof body.tipo === "string" ? body.tipo : "";
     const valor = parseNum(body.valor);
@@ -114,6 +122,9 @@ export async function POST(request: Request) {
     if (valor === null || valor <= 0) {
       return NextResponse.json({ mensagem: "Informe um valor maior que zero." }, { status: 400 });
     }
+    if (!Number.isFinite(valor)) {
+      return NextResponse.json({ mensagem: "Valor inválido." }, { status: 400 });
+    }
     if (!dateRaw) {
       return NextResponse.json({ mensagem: "Informe a data do custo." }, { status: 400 });
     }
@@ -121,6 +132,9 @@ export async function POST(request: Request) {
     const dataCusto = new Date(String(dateRaw));
     if (Number.isNaN(dataCusto.getTime())) {
       return NextResponse.json({ mensagem: "Data inválida." }, { status: 400 });
+    }
+    if (descricao && descricao.length > 500) {
+      return NextResponse.json({ mensagem: "Descrição muito longa." }, { status: 400 });
     }
 
     const db = getDb();
@@ -137,7 +151,9 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ custo: created });
   } catch (e) {
-    console.error(e);
+    if (process.env.NODE_ENV === "development") {
+      console.error("costs.POST error:", e);
+    }
     return NextResponse.json(
       { mensagem: "Não foi possível salvar o custo. Confira os dados e tente de novo." },
       { status: 500 },
